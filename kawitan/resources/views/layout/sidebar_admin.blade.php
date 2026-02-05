@@ -17,8 +17,9 @@
             <i class="bi bi-box-seam"></i> Kelola Setoran Sampah
         </a>
 
-        <a href="/hadiah" class="{{ request()->is('hadiah') ? 'active' : '' }}">
-            <i class="bi bi-gift"></i> Kelola Hadiah
+         <a href="{{ route('hadiah.index') }}"
+            class="{{ request()->routeIs('hadiah.index') ? 'active' : '' }}">
+            <i class="bi bi-recycle"></i> Kelola Hadiah
         </a>
 
         <a href="/kelola_user" class="{{ request()->is('kelola_user') ? 'active' : '' }}">

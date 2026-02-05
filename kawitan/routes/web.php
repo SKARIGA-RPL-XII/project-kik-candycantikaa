@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\JenisSampahController;
+use App\Http\Controllers\HadiahController;
 
 
 Route::get('/', function () {
@@ -27,9 +28,18 @@ Route::prefix('admin')->group(function () {
     Route::delete('/jenis-sampah/{id}', [JenisSampahController::class, 'destroy'])->name('jenis-sampah.destroy');
 });
 
-Route::get('/hadiah', function () {
-    return view('hadiah');
-});
+Route::get('/hadiah', [HadiahController::class, 'index'])
+    ->name('hadiah.index');
+
+Route::post('/hadiah', [HadiahController::class, 'store'])
+    ->name('hadiah.store');
+
+Route::post('/hadiah/{id}', [HadiahController::class, 'update'])
+    ->name('hadiah.update');
+
+Route::post('/hadiah/{id}/delete', [HadiahController::class, 'destroy'])
+    ->name('hadiah.destroy');
+
 
 Route::get('/kelola_user', function () {
     return view('kelola_user');

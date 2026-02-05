@@ -23,7 +23,6 @@
         <div class="card shadow-sm">
             <div class="card-body">
 
-                {{-- SEARCH --}}
                 <div class="d-flex justify-content-between align-items-center search-button-table">
                     <div class="d-flex gap-2">
                         <input type="text" id="searchText" class="form-control" placeholder="Cari Data..."
@@ -38,7 +37,6 @@
                     </button>
                 </div>
 
-                {{-- TABLE --}}
                 <div class="table-wrapper">
                     <table class="table align-middle mb-0">
                         <thead>
@@ -92,7 +90,6 @@
         </div>
     </div>
 
-    {{-- ================= MODAL TAMBAH ================= --}}
     <div class="modal fade" id="modalTambah" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -157,7 +154,6 @@
     </div>
 
 
-    {{-- ================= MODAL EDIT ================= --}}
     @foreach ($data as $item)
     <div class="modal fade" id="modalEdit{{ $item->id_jenis }}" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -225,7 +221,6 @@
 @endforeach
 
 
-    {{-- ================= MODAL KONFIRMASI HAPUS ================= --}}
     <div class="modal fade" id="modalKonfirmasiHapus" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center p-4">
@@ -243,7 +238,6 @@
         </div>
     </div>
 
-    {{-- ================= MODAL BERHASIL ================= --}}
     <div class="modal fade" id="modalBerhasilTambah" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center p-4">
@@ -285,35 +279,48 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        let idHapus = null;
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-        function showHapusModal(btn) {
-            idHapus = btn.dataset.id;
-            new bootstrap.Modal(document.getElementById('modalKonfirmasiHapus')).show();
-        }
+    let idHapus = null;
 
-        document.getElementById('btnYaHapus').addEventListener('click', function () {
+    const btnYaHapus = document.getElementById('btnYaHapus');
+    const searchText = document.getElementById('searchText');
+    const btnRefresh = document.getElementById('btnRefresh');
+
+    window.showHapusModal = function (btn) {
+        idHapus = btn.dataset.id;
+        new bootstrap.Modal(document.getElementById('modalKonfirmasiHapus')).show();
+    };
+
+    if (btnYaHapus) {
+        btnYaHapus.addEventListener('click', function () {
             if (idHapus) {
                 document.getElementById('formHapus' + idHapus).submit();
             }
         });
+    }
 
-        // search
-        document.getElementById('searchText').addEventListener('input', function () {
+    if (searchText) {
+        searchText.addEventListener('input', function () {
             let v = this.value.toLowerCase();
             document.querySelectorAll('#tableBody tr').forEach(r => {
                 r.style.display = r.textContent.toLowerCase().includes(v) ? '' : 'none';
             });
         });
+    }
 
-        document.getElementById('btnRefresh').addEventListener('click', function () {
+    if (btnRefresh) {
+        btnRefresh.addEventListener('click', function () {
             searchText.value = '';
             document.querySelectorAll('#tableBody tr').forEach(r => r.style.display = '');
         });
-    </script>
+    }
 
-    {{-- TRIGGER SESSION --}}
+});
+</script>
+
+
     @if (session('tambah_success'))
         <script>new bootstrap.Modal(document.getElementById('modalBerhasilTambah')).show();</script>
     @endif
