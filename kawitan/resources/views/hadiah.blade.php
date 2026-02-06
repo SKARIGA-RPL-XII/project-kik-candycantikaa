@@ -53,7 +53,7 @@
 
                         @foreach ($hadiah as $item)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $hadiah->firstItem() + $loop->index }}</td>
                             <td>
                                 <img src="{{ asset('storage/' . $item->gambar) }}" width="48">
                             </td>
@@ -84,6 +84,17 @@
 
                     </tbody>
                 </table>
+
+                <div class="table-footer">
+                    <div class="table-footer-left">
+                        Showing {{ $hadiah->firstItem() }} to {{ $hadiah->lastItem() }} of {{ $hadiah->total() }} results
+                    </div>
+
+                    <div class="table-footer-right">
+                        {{ $hadiah->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -111,21 +122,21 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label>Nama</label>
-                            <input type="text" name="nama_hadiah" class="form-control" required>
+                            <input type="text" name="nama_hadiah" class="form-control" placeholder="Masukkan nama" required>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label>Poin</label>
-                            <input type="number" name="poin_dibutuhkan" class="form-control" required>
+                            <input type="number" name="poin_dibutuhkan" class="form-control" placeholder="Masukkan Poin" required>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label>Stok</label>
-                            <input type="number" name="stok" class="form-control" required>
+                            <input type="number" name="stok" class="form-control" placeholder="Masukkan Stok" required>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label>Deskripsi</label>
-                        <textarea name="deskripsi" class="form-control" rows="4" required></textarea>
+                        <textarea name="deskripsi" class="form-control" rows="4" placeholder="Masukkan Deskripsi" required></textarea>
                     </div>
                 </div>
 

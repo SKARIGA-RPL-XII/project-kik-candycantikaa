@@ -10,9 +10,10 @@ class HadiahController extends Controller
 {
     public function index()
     {
-        $hadiah = Hadiah::all();
+        $hadiah = Hadiah::orderBy('id_hadiah', 'desc')->paginate(10);
         return view('hadiah', compact('hadiah'));
     }
+
 
     public function store(Request $request)
     {

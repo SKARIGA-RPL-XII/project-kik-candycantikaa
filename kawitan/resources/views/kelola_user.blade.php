@@ -43,53 +43,66 @@
                             </tr>
                         </thead>
                         <tbody id="tableBody">
+                            @forelse ($users as $index => $user)
                             <tr>
-                                <td>1</td>
-                                <td>Cantika Berliana</td>
-                                <td>caca@gmail.com</td>
-                                <td>08123456789</td>
+                                <td>{{ $users->firstItem() + $index }}</td>
+                                <td>{{ $user->username }}</td>
+                                <td>{{$user->email}}</td>
+                                <td>{{$user->tlpn ?? '-'}}</td>
+                                @endforeach
                             </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-footer">
+                        <div class="table-footer-left">
+                            Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }}
+                            results
+                        </div>
+
+                        <div class="table-footer-right">
+                            {{ $users->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
+
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-                            <script
-                                src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const searchText = document.getElementById("searchText");
+                            const btnRefresh = document.getElementById("btnRefresh");
 
+                            if (searchText) {
+                                searchText.addEventListener("input", filterTable);
+                            }
 
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    const searchText = document.getElementById("searchText");
-                                    const btnRefresh = document.getElementById("btnRefresh");
+                            if (btnRefresh) {
+                                btnRefresh.addEventListener("click", function () {
+                                    searchText.value = "";
 
-                                    if (searchText) {
-                                        searchText.addEventListener("input", filterTable);
-                                    }
+                                    const rows = document.querySelectorAll("#tableBody tr");
+                                    rows.forEach(row => {
+                                        row.style.display = "";
+                                    });
+                                });
+                            }
 
-                                    if (btnRefresh) {
-                                        btnRefresh.addEventListener("click", function () {
-                                            searchText.value = "";
+                            function filterTable() {
+                                const input = searchText.value.toLowerCase();
+                                const rows = document.querySelectorAll("#tableBody tr");
 
-                                            const rows = document.querySelectorAll("#tableBody tr");
-                                            rows.forEach(row => {
-                                                row.style.display = "";
-                                            });
-                                        });
-                                    }
-
-                                    function filterTable() {
-                                        const input = searchText.value.toLowerCase();
-                                        const rows = document.querySelectorAll("#tableBody tr");
-
-                                        rows.forEach(row => {
-                                            const text = row.textContent.toLowerCase();
-                                            if (text.includes(input)) {
-                                                row.style.display = "";
-                                            } else {
-                                                row.style.display = "none";
-                                            }
-                                        });
+                                rows.forEach(row => {
+                                    const text = row.textContent.toLowerCase();
+                                    if (text.includes(input)) {
+                                        row.style.display = "";
+                                    } else {
+                                        row.style.display = "none";
                                     }
                                 });
-                            </script>
+                            }
+                        });
+                    </script>
 
 
 </body>

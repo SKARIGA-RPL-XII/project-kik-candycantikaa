@@ -13,18 +13,19 @@
             <i class="bi bi-recycle"></i> Kelola Jenis Sampah
         </a>
 
-        <a href="/setoran" class="{{ request()->is('setoran') ? 'active' : '' }}">
+        <a href="{{ route('setoran.index') }}" class="{{ request()->routeIs('setoran.*') ? 'active' : '' }}">
             <i class="bi bi-box-seam"></i> Kelola Setoran Sampah
         </a>
 
-         <a href="{{ route('hadiah.index') }}"
-            class="{{ request()->routeIs('hadiah.index') ? 'active' : '' }}">
+
+        <a href="{{ route('hadiah.index') }}" class="{{ request()->routeIs('hadiah.index') ? 'active' : '' }}">
             <i class="bi bi-recycle"></i> Kelola Hadiah
         </a>
 
-        <a href="/kelola_user" class="{{ request()->is('kelola_user') ? 'active' : '' }}">
+        <a href="{{ route('kelola_user') }}" class="{{ request()->routeIs('kelola_user') ? 'active' : '' }}">
             <i class="bi bi-people"></i> Kelola Data Pengguna
         </a>
+
 
         <a href="/persetujuan" class="{{ request()->is('persetujuan') ? 'active' : '' }}">
             <i class="bi bi-check-circle"></i> Penukaran Poin

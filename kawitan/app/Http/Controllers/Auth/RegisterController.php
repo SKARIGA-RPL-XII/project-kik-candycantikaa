@@ -32,9 +32,11 @@ class RegisterController extends Controller
             'tlpn' => $request->tlpn,
             'password' => Hash::make($request->password),
             'role' => 'user',
-            'created_at' => now(),
+            'created_at' => now(), 
+            'created_at',
         ]);
 
-        return redirect()->route('register')->with('success', 'Registrasi berhasil, silakan login');
+
+        return redirect()->route('login')->with('success', 'Registrasi berhasil, silakan login');
     }
 }

@@ -449,3 +449,64 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     right: 0;
 }
 
+.table-footer {
+    display: grid;
+    grid-template-columns: 1fr 120px; /* 120px = lebar kolom AKSI */
+    align-items: center;
+
+    margin-top: 14px;
+    padding: 0 16px 12px 16px;
+}
+
+/* kiri */
+.table-footer-left {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* kanan = sejajar kolom AKSI */
+.table-footer-right {
+    justify-self: end;
+}
+
+/* HILANGKAN showing bawaan Laravel */
+.table-footer-right p.small {
+    display: none;
+}
+
+/* pagination styling */
+.table-footer-right .pagination {
+    margin: 0;
+}
+
+.table-footer-right .page-item {
+    margin: 0 4px;
+}
+
+.table-footer-right .page-link {
+    border-radius: 8px;
+    padding: 6px 14px;
+}
+
+.table-footer-right .page-item.active .page-link {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+    color: #fff;
+}
+
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-container--default .select2-selection--single {
+    height: 38px;
+    padding: 5px 8px;
+    border-radius: 6px;
+}
+
+.select2-container--default .select2-selection__arrow {
+    height: 36px;
+}
+
+
+

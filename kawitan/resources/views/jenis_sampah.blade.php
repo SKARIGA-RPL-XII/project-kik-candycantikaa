@@ -47,20 +47,20 @@
                                 <th>CO₂ / Kg</th>
                                 <th>Air / Kg</th>
                                 <th>Energi / Kg</th>
-                                <th>Aksi</th>
+                                <th class="col-aksi">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
 
                             @foreach ($data as $item)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $data->firstItem() + $loop->index }}</td>
                                     <td>{{ $item->nama_jenis }}</td>
                                     <td>{{ $item->poin_per_kg }}</td>
                                     <td>{{ $item->co2_per_kg }}</td>
                                     <td>{{ $item->air_per_kg }}</td>
                                     <td>{{ $item->energi_per_kg }}</td>
-                                    <td>
+                                    <td class="col-aksi">
                                         <button type="button" class="btn-action edit" data-bs-toggle="modal"
                                             data-bs-target="#modalEdit{{ $item->id_jenis }}">
                                             <i class="bi bi-pencil"></i>
@@ -83,7 +83,20 @@
                             @endforeach
 
                         </tbody>
+
                     </table>
+
+                    <div class="table-footer">
+                        <div class="table-footer-left">
+                            Showing {{ $data->firstItem() }} to {{ $data->lastItem() }} of {{ $data->total() }} results
+                        </div>
+
+                        <div class="table-footer-right">
+                            {{ $data->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
+
+
                 </div>
 
             </div>
@@ -105,37 +118,36 @@
 
                         <div class="mb-3">
                             <label class="form-label">Jenis Sampah</label>
-                            <input type="text" name="nama_jenis" class="form-control" placeholder="Jenis Sampah"
+                            <input type="text" name="nama_jenis" class="form-control" placeholder="Masukkan Jenis Sampah"
                                 required>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Poin / Kg</label>
-                                <input type="number" name="poin_per_kg" class="form-control" placeholder="Poin / Kg"
-                                    required>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Poin / Kg</label>
+                            <input type="number" name="poin_per_kg" class="form-control" placeholder="Masukkan Poin/kg" required>
+                        </div>
 
-                            <div class="col-md-6 mb-3">
+
+                        <!-- <div class="row">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">CO₂ / Kg</label>
-                                <input type="number" step="0.01" name="co2_per_kg" class="form-control"
-                                    placeholder="CO₂ / Kg" required>
+                                <input type="number" step="0.01" class="form-control" value="Otomatis" readonly>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Air / Kg</label>
-                                <input type="number" step="0.01" name="air_per_kg" class="form-control"
-                                    placeholder="Air / Kg" required>
+                                <input type="number" step="0.01" class="form-control" value="Otomatis" readonly>
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Energi / Kg</label>
-                                <input type="number" step="0.01" name="energi_per_kg" class="form-control"
-                                    placeholder="Energi / Kg" required>
+                                <input type="number" step="0.01" class="form-control" value="Otomatis" readonly>
                             </div>
-                        </div>
+                        </div> -->
+
+                        <p class="text-muted small">
+                            * Nilai eco impact dihitung otomatis berdasarkan jenis sampah
+                        </p>
 
                     </div>
 
@@ -155,70 +167,74 @@
 
 
     @foreach ($data as $item)
-    <div class="modal fade" id="modalEdit{{ $item->id_jenis }}" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal fade" id="modalEdit{{ $item->id_jenis }}" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
 
-            <form action="{{ route('jenis-sampah.update', $item->id_jenis) }}" method="POST">
-                @csrf
-                @method('PUT')
+                    <form action="{{ route('jenis-sampah.update', $item->id_jenis) }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">Edit Jenis Sampah</h5>
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title">Edit Jenis Sampah</h5>
+                        </div>
+
+                        <div class="modal-body px-4">
+
+                            <div class="mb-3">
+                                <label class="form-label">Jenis Sampah</label>
+                                <input type="text" name="nama_jenis" class="form-control" value="{{ $item->nama_jenis }}"
+                                    required>
+                            </div>
+
+                            <!-- <div class="row"> -->
+                            <div class="mb-3">
+                                <label class="form-label">Poin / Kg</label>
+                                <input type="number" name="poin_per_kg" class="form-control"
+                                    value="{{ $item->poin_per_kg }}" required>
+                            </div>
+
+                            <!-- <div class="col-md-6 mb-3">
+                                                                <label class="form-label">CO₂ / Kg</label>
+                                                                <input type="number" step="0.01" name="co2_per_kg" class="form-control"
+                                                                    value="{{ $item->co2_per_kg }}" required>
+                                                            </div> -->
+                            <!-- </div> -->
+
+                            <!-- <div class="row">
+                                                            <div class="col-md-6 mb-3">
+                                                                <label class="form-label">Air / Kg</label>
+                                                                <input type="number" step="0.01" name="air_per_kg" class="form-control"
+                                                                    value="{{ $item->air_per_kg }}" required>
+                                                            </div>
+
+                                                            <div class="col-md-6 mb-3">
+                                                                <label class="form-label">Energi / Kg</label>
+                                                                <input type="number" step="0.01" name="energi_per_kg" class="form-control"
+                                                                    value="{{ $item->energi_per_kg }}" required>
+                                                            </div>
+                                                        </div> -->
+
+                            <p class="text-muted small">
+                                * Nilai eco impact dihitung otomatis berdasarkan jenis sampah
+                            </p>
+
+                        </div>
+
+                        <div class="modal-footer border-0 px-4 pb-4">
+                            <button type="button" class="btn btn-outline-danger px-4" data-bs-dismiss="modal">
+                                Batal
+                            </button>
+                            <button type="submit" class="btn-green px-4">
+                                Simpan
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
-
-                <div class="modal-body px-4">
-
-                    <div class="mb-3">
-                        <label class="form-label">Jenis Sampah</label>
-                        <input type="text" name="nama_jenis" class="form-control"
-                            value="{{ $item->nama_jenis }}" required>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Poin / Kg</label>
-                            <input type="number" name="poin_per_kg" class="form-control"
-                                value="{{ $item->poin_per_kg }}" required>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">CO₂ / Kg</label>
-                            <input type="number" step="0.01" name="co2_per_kg" class="form-control"
-                                value="{{ $item->co2_per_kg }}" required>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Air / Kg</label>
-                            <input type="number" step="0.01" name="air_per_kg" class="form-control"
-                                value="{{ $item->air_per_kg }}" required>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Energi / Kg</label>
-                            <input type="number" step="0.01" name="energi_per_kg" class="form-control"
-                                value="{{ $item->energi_per_kg }}" required>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer border-0 px-4 pb-4">
-                    <button type="button" class="btn btn-outline-danger px-4" data-bs-dismiss="modal">
-                        Batal
-                    </button>
-                    <button type="submit" class="btn-green px-4">
-                        Simpan
-                    </button>
-                </div>
-
-            </form>
+            </div>
         </div>
-    </div>
-</div>
-@endforeach
+    @endforeach
 
 
     <div class="modal fade" id="modalKonfirmasiHapus" tabindex="-1">
@@ -279,46 +295,46 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
 
-    let idHapus = null;
+            let idHapus = null;
 
-    const btnYaHapus = document.getElementById('btnYaHapus');
-    const searchText = document.getElementById('searchText');
-    const btnRefresh = document.getElementById('btnRefresh');
+            const btnYaHapus = document.getElementById('btnYaHapus');
+            const searchText = document.getElementById('searchText');
+            const btnRefresh = document.getElementById('btnRefresh');
 
-    window.showHapusModal = function (btn) {
-        idHapus = btn.dataset.id;
-        new bootstrap.Modal(document.getElementById('modalKonfirmasiHapus')).show();
-    };
+            window.showHapusModal = function (btn) {
+                idHapus = btn.dataset.id;
+                new bootstrap.Modal(document.getElementById('modalKonfirmasiHapus')).show();
+            };
 
-    if (btnYaHapus) {
-        btnYaHapus.addEventListener('click', function () {
-            if (idHapus) {
-                document.getElementById('formHapus' + idHapus).submit();
+            if (btnYaHapus) {
+                btnYaHapus.addEventListener('click', function () {
+                    if (idHapus) {
+                        document.getElementById('formHapus' + idHapus).submit();
+                    }
+                });
             }
-        });
-    }
 
-    if (searchText) {
-        searchText.addEventListener('input', function () {
-            let v = this.value.toLowerCase();
-            document.querySelectorAll('#tableBody tr').forEach(r => {
-                r.style.display = r.textContent.toLowerCase().includes(v) ? '' : 'none';
-            });
-        });
-    }
+            if (searchText) {
+                searchText.addEventListener('input', function () {
+                    let v = this.value.toLowerCase();
+                    document.querySelectorAll('#tableBody tr').forEach(r => {
+                        r.style.display = r.textContent.toLowerCase().includes(v) ? '' : 'none';
+                    });
+                });
+            }
 
-    if (btnRefresh) {
-        btnRefresh.addEventListener('click', function () {
-            searchText.value = '';
-            document.querySelectorAll('#tableBody tr').forEach(r => r.style.display = '');
-        });
-    }
+            if (btnRefresh) {
+                btnRefresh.addEventListener('click', function () {
+                    searchText.value = '';
+                    document.querySelectorAll('#tableBody tr').forEach(r => r.style.display = '');
+                });
+            }
 
-});
-</script>
+        });
+    </script>
 
 
     @if (session('tambah_success'))

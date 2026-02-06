@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\JenisSampahController;
 use App\Http\Controllers\HadiahController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SetoranController;
 
 
 Route::get('/', function () {
@@ -41,13 +43,23 @@ Route::post('/hadiah/{id}/delete', [HadiahController::class, 'destroy'])
     ->name('hadiah.destroy');
 
 
-Route::get('/kelola_user', function () {
-    return view('kelola_user');
-});
+Route::get('/kelola_user', [UserController::class, 'index'])
+    ->name('kelola_user');
 
-Route::get('/setoran', function () {
-    return view('setoran');
-});
+Route::get('/setoran', [SetoranController::class, 'index'])
+    ->name('setoran.index');
+
+Route::post('/setoran', [SetoranController::class, 'store'])
+    ->name('setoran.store');
+
+Route::get('/setoran/{id}', [SetoranController::class, 'show'])
+    ->name('setoran.show');
+
+Route::put('/setoran/{id}', [SetoranController::class, 'update'])
+    ->name('setoran.update');
+
+Route::delete('/setoran/{id}', [SetoranController::class, 'destroy'])
+    ->name('setoran.destroy');
 
 Route::get('/persetujuan', function () {
     return view('persetujuan');
