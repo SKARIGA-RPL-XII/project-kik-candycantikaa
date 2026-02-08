@@ -7,6 +7,10 @@ use App\Http\Controllers\JenisSampahController;
 use App\Http\Controllers\HadiahController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SetoranController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\UserProfileController;
+
 
 
 Route::get('/', function () {
@@ -73,14 +77,6 @@ Route::get('/poin_admin', function () {
     return view('poin_admin');
 });
 
-Route::get('/dashboard_admin', function () {
-    return view('dashboard_admin');
-});
-
-Route::get('/dashboard_user', function () {
-    return view('dashboard_user');
-});
-
 Route::get('/tukar_poin_user', function () {
     return view('tukar_poin_user');
 });
@@ -89,8 +85,14 @@ Route::get('/riwayat_setor', function () {
     return view('riwayat_setor');
 });
 
-Route::get('/profile', function () {
-    return view('profile');
+
+Route::middleware(['checkLogin', 'admin'])->group(function () {
+    Route::get('/dashboard_admin', [AdminController::class, 'index']);
 });
 
+Route::middleware(['checkLogin', 'user'])->group(function () {
+    Route::get('/dashboard_user', [UserDashboardController::class, 'index']);
 
+    Route::get('/profile', [UserProfileController::class, 'index'])->name('profile');
+    Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
+});

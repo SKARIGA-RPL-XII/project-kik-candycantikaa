@@ -54,7 +54,7 @@
                             <hr class="dropdown-divider opacity-50">
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center p-2 text-danger" href="#"
+                            <a class="dropdown-item d-flex align-items-center p-2 text-danger" href="/login"
                                 style="border-radius: 12px;">
                                 <div class="icon-circle me-2"
                                     style="width: 30px; height: 30px; background: #ffebee; color: #c62828; display: flex; align-items: center; justify-content: center;">
