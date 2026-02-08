@@ -99,7 +99,7 @@
                     </div>
 
                     <div class="mt-5 text-end">
-                        <button type="button" class="btn btn-light px-4 py-3 rounded-pill fw-bold me-2">Batal</button>
+                        <!-- <button type="button" class="btn btn-light px-4 py-3 rounded-pill fw-bold me-2">Batal</button> -->
                         <button type="submit" class="btn btn-success px-5 py-3 rounded-pill fw-bold shadow-sm">
                             Simpan Perubahan
                         </button>

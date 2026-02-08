@@ -23,7 +23,7 @@
             <div class="col-md-4">
                 <div class="card stat-card bg-points-total shadow-sm p-4 h-100 border-0">
                     <small class="text-uppercase fw-bold opacity-75">Total Saldo Poin</small>
-                    <h1 class="fw-800 mb-0 mt-2">2.450 <small class="fs-6">pts</small></h1>
+                    <h1 class="fw-800 mb-0 mt-2">2.450 <small class="fs-6">poin</small></h1>
                 </div>
             </div>
             <div class="col-md-4">
@@ -92,36 +92,45 @@
 
         <div class="d-flex align-items-center mb-4">
             <h4 class="fw-800 mb-0">Riwayat Penukaran Hadiah</h4>
-            <button class="btn btn-tertiary-primary btn-sm rounded-pill ms-auto fw-bold px-4" data-bs-toggle="modal"
+            <button class="btn btn-outline-success btn-sm rounded-pill ms-auto fw-bold px-4" data-bs-toggle="modal"
                 data-bs-target="#allHistoryModal">
-                Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                Riwayat Selesai <i class="bi bi-clock-history ms-1"></i>
             </button>
         </div>
 
         <div class="history-card-wrapper p-4 shadow-sm border-0 bg-white mb-5">
-            @if(isset($riwayat_ada) && $riwayat_ada == false)
+            @if(!isset($riwayat) || count($riwayat) == 0)
                 <div class="text-center py-5">
-                    <i class="bi bi-clock-history text-light d-block mb-3" style="font-size: 4rem;"></i>
+                    <i class="bi bi-gift text-light d-block mb-3" style="font-size: 4rem;"></i>
                     <h5 class="fw-bold">Belum ada riwayat tukar</h5>
                     <p class="text-muted small mb-3">Poin yang kamu tukarkan akan muncul di sini.</p>
                     <a href="#katalog-hadiah" class="btn btn-success btn-sm rounded-pill px-4 fw-bold">Tukar Sekarang</a>
                 </div>
             @else
-                <div class="history-item-card d-flex align-items-center justify-content-between p-3 rounded-4 bg-white shadow-sm border-start border-4"
-                    style="border-left-color: #f1c40f !important;">
-                    <div class="d-flex align-items-center">
-                        <div class="icon-circle bg-warning-subtle text-warning me-3 d-none d-md-flex">
-                            <i class="bi bi-gift-fill"></i>
+                @foreach($riwayat->whereIn('status', ['Siap Diambil', 'Diproses']) as $item)
+                    <div class="history-item-card d-flex align-items-center justify-content-between p-3 rounded-4 bg-white shadow-sm border-start border-4 mb-3"
+                        style="border-left-color: #f1c40f !important;">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle bg-warning-subtle text-warning me-3 d-none d-md-flex">
+                                <i class="bi bi-gift-fill"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">{{ $item->nama_hadiah }}</h6>
+                                <p class="text-muted small mb-0">{{ $item->tanggal }} • {{ $item->poin }} poin</p>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="fw-bold mb-1">Eco-Friendly Tumblr</h6>
-                            <p class="text-muted small mb-0">12 Feb 2024 • 800 pts</p>
-                        </div>
+                        <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-3 py-2 fw-bold small">
+                            {{ $item->status }}
+                        </span>
                     </div>
-                    <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-3 py-2 fw-bold small">
-                        Siap Diambil
-                    </span>
-                </div>
+                @endforeach
+
+                @if($riwayat->whereIn('status', ['Siap Diambil', 'Diproses'])->count() == 0)
+                    <div class="text-center py-4">
+                        <p class="text-muted small mb-0">Semua penukaranmu sudah selesai. Cek di tombol <b>Riwayat Selesai</b>.
+                        </p>
+                    </div>
+                @endif
             @endif
         </div>
 
@@ -135,7 +144,7 @@
                 <div class="card reward-card border-0 shadow-sm h-100">
                     <div class="reward-img-wrapper">
                         <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=500" alt="Sembako">
-                        <div class="badge-points shadow-sm">1.200 pts</div>
+                        <div class="badge-points shadow-sm">1.200 poin</div>
                     </div>
                     <div class="card-body p-4 text-center">
                         <h6 class="fw-bold mb-3">Paket Sembako Hemat</h6>
@@ -167,7 +176,7 @@
                                 <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
                                 <div>
                                     <h6 class="fw-bold mb-0">Paket Sembako Hemat</h6>
-                                    <small class="text-muted">05 Feb 2024 • 1.200 pts</small>
+                                    <small class="text-muted">05 Feb 2024 • 1.200 poin</small>
                                 </div>
                             </div>
                             <span class="badge bg-success rounded-pill fw-bold"

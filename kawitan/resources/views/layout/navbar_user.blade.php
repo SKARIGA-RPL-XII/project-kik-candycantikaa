@@ -36,7 +36,7 @@
                 <div class="dropdown">
                     <button class="btn btn-dark rounded-pill px-4 shadow-sm fw-bold btn-custom dropdown-toggle"
                         type="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle me-1"></i> My Account
+                        <i class="bi bi-person-circle me-1"></i> Akun Saya
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg p-2 mt-3"
                         aria-labelledby="accountDropdown">

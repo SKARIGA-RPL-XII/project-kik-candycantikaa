@@ -103,7 +103,7 @@
                                 <i class="bi bi-box-seam"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-1 text-dark">{{ $item->jenis_sampah }}</h6>
+                                <h6 class="fw-bold mb-1 text-dark">{{ $item->jenis->nama_jenis }}</h6>
                                 <p class="text-muted small mb-0">
                                     {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
                                     <span class="mx-2">•</span>
@@ -112,7 +112,8 @@
                             </div>
                         </div>
                         <div class="text-end">
-                            <span class="points-earned fw-800 text-success">+{{ number_format($item->poin) }} pts</span>
+                            <span class="points-earned fw-800 text-success">
+                                +{{ number_format($item->total_poin) }} pts</span>
                         </div>
                     </div>
                 @endforeach

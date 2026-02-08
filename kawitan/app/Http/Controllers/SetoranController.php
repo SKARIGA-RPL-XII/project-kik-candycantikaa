@@ -7,6 +7,8 @@ use App\Models\Setoran;
 use App\Models\User;
 use App\Models\JenisSampah;
 use Carbon\Carbon;
+use App\Models\RiwayatPoin;
+
 
 class SetoranController extends Controller
 {
@@ -14,7 +16,8 @@ class SetoranController extends Controller
     public function index(Request $request)
     {
         $query = Setoran::with(['user', 'jenis'])
-            ->orderBy('tanggal', 'desc');
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('id_setoran', 'desc');
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -62,6 +65,8 @@ class SetoranController extends Controller
 
         $berat = $request->berat;
 
+        $totalPoin = $berat * $jenis->poin_per_kg;
+
         Setoran::create([
             'id_user' => $request->id_user,
             'id_jenis' => $request->id_jenis,
@@ -71,6 +76,13 @@ class SetoranController extends Controller
             'total_air' => $berat * $jenis->air_per_kg,
             'total_energi' => $berat * $jenis->energi_per_kg,
             'tanggal' => $today,
+        ]);
+
+        RiwayatPoin::create([
+            'id_user' => $request->id_user,
+            'poin' => 'tambah',
+            'jumlah_poin' => $totalPoin,
+            'keterangan' => 'Setor sampah ' . $jenis->nama_jenis,
         ]);
 
         return redirect()
@@ -89,6 +101,10 @@ class SetoranController extends Controller
         $jenis = JenisSampah::where('id_jenis', $setoran->id_jenis)->firstOrFail();
 
         $berat = $request->berat;
+
+        $setoran = Setoran::where('id_setoran', $id)->firstOrFail();
+
+        $setoran = Setoran::where('id_setoran', $id)->firstOrFail();
 
         $setoran->update([
             'berat' => $berat,

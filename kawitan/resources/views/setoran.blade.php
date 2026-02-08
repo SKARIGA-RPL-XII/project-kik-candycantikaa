@@ -304,6 +304,32 @@
         </div>
     @endforeach
 
+    <div class="modal fade" id="modalBerhasilTambah" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div class="icon-circle-success">
+                    <i class="bi bi-check-circle text-success fs-2"></i>
+                </div>
+                <h5>Data Berhasil Ditambahkan</h5>
+                <p class="text-muted">Hadiah berhasil disimpan ke sistem.</p>
+                <button class="btn-green w-100" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalBerhasilEdit" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div class="icon-circle-success">
+                    <i class="bi bi-check-circle text-success fs-2"></i>
+                </div>
+                <h5>Data Berhasil Diperbarui</h5>
+                <p class="text-muted">Hadiah berhasil disimpan ke sistem.</p>
+                <button class="btn-green w-100" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal fade" id="modalKonfirmasiHapus" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -396,6 +422,24 @@
         document.getElementById('btnRefresh').addEventListener('click', function () {
             window.location.href = "{{ route('setoran.index') }}";
         });
+
+         document.addEventListener('DOMContentLoaded', function () {
+
+        @if (session('tambah_success'))
+            let modalTambah = new bootstrap.Modal(
+                document.getElementById('modalBerhasilTambah')
+            );
+            modalTambah.show();
+        @endif
+
+        @if (session('edit_success'))
+            let modalEdit = new bootstrap.Modal(
+                document.getElementById('modalBerhasilEdit')
+            );
+            modalEdit.show();
+        @endif
+
+    });
 
     </script>
 
