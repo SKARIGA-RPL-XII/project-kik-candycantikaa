@@ -24,7 +24,7 @@
 
                 <div class="d-flex justify-content-between align-items-center search-button-table">
                     <div class="d-flex gap-2 w-80">
-                        <input type="text" id="searchText" class="form-control w-50" placeholder="Cari Data..."
+                        <input type="text" id="searchText" class="form-control" placeholder="Cari Data..."
                             style="width: 160px;">
 
                         <input type="date" id="searchDate" class="form-control" style="width: 160px;">

@@ -77,3 +77,20 @@ Route::get('/dashboard_admin', function () {
     return view('dashboard_admin');
 });
 
+Route::get('/dashboard_user', function () {
+    return view('dashboard_user');
+});
+
+Route::get('/tukar_poin_user', function () {
+    return view('tukar_poin_user');
+});
+
+Route::get('/riwayat_setor', function () {
+    return view('riwayat_setor');
+});
+
+Route::get('/profile', function () {
+    return view('profile');
+});
+
+

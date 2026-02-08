@@ -56,10 +56,10 @@
                                 <tr>
                                     <td>{{ $data->firstItem() + $loop->index }}</td>
                                     <td>{{ $item->nama_jenis }}</td>
-                                    <td>{{ $item->poin_per_kg }}</td>
-                                    <td>{{ $item->co2_per_kg }}</td>
-                                    <td>{{ $item->air_per_kg }}</td>
-                                    <td>{{ $item->energi_per_kg }}</td>
+                                    <td>{{ $item->poin_per_kg }} Poin</td>
+                                    <td>{{ (float) $item->co2_per_kg }} kg CO₂</td>
+                                    <td>{{ (float) $item->air_per_kg }} L</td>
+                                    <td>{{ (float) $item->energi_per_kg }} kWh</td>
                                     <td class="col-aksi">
                                         <button type="button" class="btn-action edit" data-bs-toggle="modal"
                                             data-bs-target="#modalEdit{{ $item->id_jenis }}">
