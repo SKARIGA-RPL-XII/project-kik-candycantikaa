@@ -118,13 +118,14 @@
 
                         <div class="mb-3">
                             <label class="form-label">Jenis Sampah</label>
-                            <input type="text" name="nama_jenis" class="form-control" placeholder="Masukkan Jenis Sampah"
-                                required>
+                            <input type="text" name="nama_jenis" class="form-control"
+                                placeholder="Masukkan Jenis Sampah" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Poin / Kg</label>
-                            <input type="number" name="poin_per_kg" class="form-control" placeholder="Masukkan Poin/kg" required>
+                            <input type="number" name="poin_per_kg" class="form-control" placeholder="Masukkan Poin/kg"
+                                required>
                         </div>
 
 
@@ -195,25 +196,25 @@
                             </div>
 
                             <!-- <div class="col-md-6 mb-3">
-                                                                <label class="form-label">CO₂ / Kg</label>
-                                                                <input type="number" step="0.01" name="co2_per_kg" class="form-control"
-                                                                    value="{{ $item->co2_per_kg }}" required>
-                                                            </div> -->
+                                                                    <label class="form-label">CO₂ / Kg</label>
+                                                                    <input type="number" step="0.01" name="co2_per_kg" class="form-control"
+                                                                        value="{{ $item->co2_per_kg }}" required>
+                                                                </div> -->
                             <!-- </div> -->
 
                             <!-- <div class="row">
-                                                            <div class="col-md-6 mb-3">
-                                                                <label class="form-label">Air / Kg</label>
-                                                                <input type="number" step="0.01" name="air_per_kg" class="form-control"
-                                                                    value="{{ $item->air_per_kg }}" required>
-                                                            </div>
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label class="form-label">Air / Kg</label>
+                                                                    <input type="number" step="0.01" name="air_per_kg" class="form-control"
+                                                                        value="{{ $item->air_per_kg }}" required>
+                                                                </div>
 
-                                                            <div class="col-md-6 mb-3">
-                                                                <label class="form-label">Energi / Kg</label>
-                                                                <input type="number" step="0.01" name="energi_per_kg" class="form-control"
-                                                                    value="{{ $item->energi_per_kg }}" required>
-                                                            </div>
-                                                        </div> -->
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label class="form-label">Energi / Kg</label>
+                                                                    <input type="number" step="0.01" name="energi_per_kg" class="form-control"
+                                                                        value="{{ $item->energi_per_kg }}" required>
+                                                                </div>
+                                                            </div> -->
 
                             <p class="text-muted small">
                                 * Nilai eco impact dihitung otomatis berdasarkan jenis sampah

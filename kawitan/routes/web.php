@@ -33,6 +33,11 @@ Route::prefix('admin')->group(function () {
     Route::post('/jenis-sampah', [JenisSampahController::class, 'store'])->name('jenis-sampah.store');
     Route::put('/jenis-sampah/{id}', [JenisSampahController::class, 'update'])->name('jenis-sampah.update');
     Route::delete('/jenis-sampah/{id}', [JenisSampahController::class, 'destroy'])->name('jenis-sampah.destroy');
+    Route::put('/users/{id_user}', [UserController::class, 'update'])
+        ->name('admin.users.update');
+    Route::delete('/admin/users/{id_user}', [UserController::class, 'destroy'])
+        ->name('admin.users.destroy');
+
 });
 
 Route::get('/hadiah', [HadiahController::class, 'index'])
