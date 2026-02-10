@@ -96,4 +96,5 @@ Route::middleware(['checkLogin', 'user'])->group(function () {
         ->name('tukar_poin_user');
     Route::post('/tukar-poin', [UserTukarPoinController::class, 'tukar'])
         ->name('tukar.poin');
+    Route::post('/tukar-poin', [UserTukarPoinController::class, 'tukar'])->name('tukar.poin');
 });

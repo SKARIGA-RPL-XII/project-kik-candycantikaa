@@ -95,7 +95,7 @@
         </div>
 
         <div class="d-flex align-items-center mb-4">
-            <h4 class="fw-800 mb-0">Riwayat Poin</h4>
+            <h4 class="fw-800 mb-0">Riwayat Tukar Hadiah</h4>
             <button class="btn btn-outline-success btn-sm rounded-pill ms-auto fw-bold px-4" data-bs-toggle="modal"
                 data-bs-target="#allHistoryModal">
                 Riwayat Lengkap <i class="bi bi-clock-history ms-1"></i>
@@ -103,43 +103,41 @@
         </div>
 
         <div class="history-card-wrapper p-4 shadow-sm border-0 bg-white mb-5">
-            @if($riwayat->count() == 0)
+            @if($riwayatTukarLatest->count() == 0)
                 <div class="text-center py-5">
-                    <i class="bi bi-gift text-light d-block mb-3" style="font-size: 4rem;"></i>
-                    <h5 class="fw-bold">Belum ada riwayat</h5>
-                    <p class="text-muted small mb-0">Transaksi poin akan muncul di sini.</p>
+                    <i class="bi bi-box2-heart text-light d-block mb-3" style="font-size: 4rem;"></i>
+                    <h5 class="fw-bold">Belum ada penukaran hadiah</h5>
+                    <p class="text-muted small mb-0">Riwayat penukaran hadiah akan muncul di sini.</p>
                 </div>
             @else
-                @foreach($riwayat as $item)
+                @foreach($riwayatTukarLatest as $item)
                     <div class="history-item-card d-flex align-items-center justify-content-between p-3 rounded-4 bg-white shadow-sm border-start border-4 mb-3"
-                        style="border-left-color: {{ $item->poin == 'tambah' ? '#2ecc71' : '#e74c3c' }} !important;">
+                        style="border-left-color: #2ecc71">
 
                         <div class="d-flex align-items-center">
-                            <div class="icon-circle 
-                                        {{ $item->poin == 'tambah' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }} 
-                                        me-3 d-none d-md-flex">
-                                <i class="bi {{ $item->poin == 'tambah' ? 'bi-arrow-down-left' : 'bi-arrow-up-right' }}"></i>
+                            <div class="icon-circle bg-success-subtle text-success me-3 d-none d-md-flex">
+                                <i class="bi bi-gift"></i>
                             </div>
 
                             <div>
                                 <h6 class="fw-bold mb-1">
-                                    {{ $item->poin == 'tambah' ? 'Poin Masuk' : 'Poin Keluar' }}
+                                    {{ $item->nama_hadiah }}
                                 </h6>
                                 <p class="text-muted small mb-0">
-                                    {{ number_format($item->jumlah_poin) }} poin
+                                    {{ number_format($item->poin_dipakai) }} poin
                                 </p>
                             </div>
                         </div>
 
-                        <span class="badge 
-                                    {{ $item->poin == 'tambah' ? 'bg-success-subtle text-success-emphasis' : 'bg-danger-subtle text-danger-emphasis' }} 
-                                    rounded-pill px-3 py-2 fw-bold small">
-                            {{ strtoupper($item->poin) }}
+                        <span class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-2 fw-bold small">
+                            {{ strtoupper($item->status) }}
                         </span>
+
                     </div>
                 @endforeach
             @endif
         </div>
+
 
         <div id="katalog-hadiah" class="d-flex justify-content-between align-items-end mb-4">
             <h4 class="fw-800 mb-0">Pilih Hadiah</h4>
@@ -177,30 +175,27 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content shadow-lg">
                 <div class="modal-header border-0 p-4 pb-0">
-                    <h5 class="modal-title fw-800">Semua Riwayat Poin</h5>
+                    <h5 class="modal-title fw-800">Semua Riwayat Tukar Hadiah</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
                     <div class="history-list-full">
-                        @foreach($riwayat as $item)
+                        @foreach($riwayatTukarAll as $item)
                             <div
                                 class="d-flex align-items-center justify-content-between p-3 mb-2 border rounded-4 bg-light">
                                 <div class="d-flex align-items-center">
-                                    <i
-                                        class="bi {{ $item->poin == 'tambah' ? 'bi-plus-circle-fill text-success' : 'bi-dash-circle-fill text-danger' }} fs-4 me-3"></i>
+                                    <i class="bi bi-gift-fill text-success fs-4 me-3"></i>
                                     <div>
                                         <h6 class="fw-bold mb-0">
-                                            {{ $item->poin == 'tambah' ? 'Poin Masuk' : 'Poin Keluar' }}
+                                            {{ $item->nama_hadiah }}
                                         </h6>
                                         <small class="text-muted">
-                                            {{ number_format($item->jumlah_poin) }} poin
+                                            {{ number_format($item->poin_dipakai) }} poin
                                         </small>
                                     </div>
                                 </div>
-                                <span
-                                    class="badge {{ $item->poin == 'tambah' ? 'bg-success' : 'bg-danger' }} rounded-pill fw-bold"
-                                    style="font-size: 0.7rem;">
-                                    {{ strtoupper($item->poin) }}
+                                <span class="badge bg-success rounded-pill fw-bold" style="font-size: 0.7rem;">
+                                    {{ strtoupper($item->status) }}
                                 </span>
                             </div>
                         @endforeach
@@ -256,6 +251,40 @@
             document.getElementById('modalDesc').innerText = btn.dataset.desc;
         });
     </script>
+
+    @if(session('success'))
+        <div class="modal fade" id="successModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content p-4 text-center">
+                    <h5 class="fw-bold text-success">Berhasil</h5>
+                    <p class="mb-3">{{ session('success') }}</p>
+                    <button class="btn btn-success rounded-pill px-4" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            new bootstrap.Modal(document.getElementById('successModal')).show();
+        </script>
+    @endif
+
+    @if(session('error'))
+        <div class="modal fade" id="errorModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content p-4 text-center">
+                    <h5 class="fw-bold text-danger">Gagal</h5>
+                    <p class="mb-3">{{ session('error') }}</p>
+                    <button class="btn btn-danger rounded-pill px-4" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            new bootstrap.Modal(document.getElementById('errorModal')).show();
+        </script>
+    @endif
+
+
 </body>
 
 </html>
