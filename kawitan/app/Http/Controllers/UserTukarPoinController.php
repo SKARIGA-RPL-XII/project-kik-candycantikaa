@@ -32,7 +32,6 @@ class UserTukarPoinController extends Controller
             ->join('hadiah', 'penukaran_poin.id_hadiah', '=', 'hadiah.id_hadiah')
             ->where('riwayat_poin.id_user', $idUser)
             ->orderBy('penukaran_poin.id_penukaran', 'desc')
-            ->limit(1)
             ->get();
 
         $riwayatTukarAll = DB::table('penukaran_poin')

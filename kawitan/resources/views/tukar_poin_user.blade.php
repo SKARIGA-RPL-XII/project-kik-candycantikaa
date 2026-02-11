@@ -19,43 +19,46 @@
 
     <div class="container" style="margin-top: 130px; padding-bottom: 100px;">
 
-        <div class="row g-4 mb-5">
+        <div class="row g-3 mb-5">
             <div class="col-md-4">
-                <div class="card stat-card bg-points-total shadow-sm p-4 h-100 border-0">
-                    <small class="text-uppercase fw-bold opacity-75">Total Saldo Poin</small>
-                    <h1 class="fw-800 mb-0 mt-2">
-                        {{ number_format($saldo) }} <small class="fs-6">poin</small>
-                    </h1>
+                <div class="card card-custom shadow-sm stat-card-compact"
+                    style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; border: none;">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <small class="fw-bold opacity-75">TOTAL SALDO</small>
+                            <div class="d-flex align-items-baseline gap-2">
+                                <h2 class="fw-800 mb-0">{{ number_format($saldo) }}</h2>
+                                <small>poin</small>
+                            </div>
+                        </div>
+                        <i class="bi bi-wallet2 fs-3 opacity-75"></i>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card stat-card bg-white shadow-sm p-4 h-100 border-0">
-                    <div class="d-flex justify-content-between align-items-center">
+                <div class="card card-custom shadow-sm stat-card-compact bg-white border-start border-success border-4">
+                    <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <small class="text-muted text-uppercase fw-bold">Poin Masuk</small>
-                            <h2 class="fw-800 mb-0 mt-1 text-success">
-                                +{{ number_format($poinMasuk) }}
-                            </h2>
+                            <small class="text-muted fw-bold">POIN MASUK</small>
+                            <h3 class="fw-800 text-success mb-0">+{{ number_format($poinMasuk) }}</h3>
                         </div>
                         <div class="icon-circle bg-success-subtle">
-                            <i class="bi bi-arrow-down-left text-success fs-3"></i>
+                            <i class="bi bi-arrow-down-left text-success fs-4"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card stat-card bg-white shadow-sm p-4 h-100 border-0">
-                    <div class="d-flex justify-content-between align-items-center">
+                <div class="card card-custom shadow-sm stat-card-compact bg-white border-start border-danger border-4">
+                    <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <small class="text-muted text-uppercase fw-bold">Poin Keluar</small>
-                            <h2 class="fw-800 mb-0 mt-1 text-danger">
-                                -{{ number_format($poinKeluar) }}
-                            </h2>
+                            <small class="text-muted fw-bold">POIN KELUAR</small>
+                            <h3 class="fw-800 text-danger mb-0">-{{ number_format($poinKeluar) }}</h3>
                         </div>
                         <div class="icon-circle bg-danger-subtle">
-                            <i class="bi bi-arrow-up-right text-danger fs-3"></i>
+                            <i class="bi bi-arrow-up-right text-danger fs-4"></i>
                         </div>
                     </div>
                 </div>
@@ -96,10 +99,6 @@
 
         <div class="d-flex align-items-center mb-4">
             <h4 class="fw-800 mb-0">Riwayat Tukar Hadiah</h4>
-            <button class="btn btn-outline-success btn-sm rounded-pill ms-auto fw-bold px-4" data-bs-toggle="modal"
-                data-bs-target="#allHistoryModal">
-                Riwayat Lengkap <i class="bi bi-clock-history ms-1"></i>
-            </button>
         </div>
 
         <div class="history-card-wrapper p-4 shadow-sm border-0 bg-white mb-5">
@@ -110,7 +109,7 @@
                     <p class="text-muted small mb-0">Riwayat penukaran hadiah akan muncul di sini.</p>
                 </div>
             @else
-                @foreach($riwayatTukarLatest as $item)
+                @foreach($riwayatTukarLatest->take(2) as $item)
                     <div class="history-item-card d-flex align-items-center justify-content-between p-3 rounded-4 bg-white shadow-sm border-start border-4 mb-3"
                         style="border-left-color: #2ecc71">
 
@@ -120,9 +119,7 @@
                             </div>
 
                             <div>
-                                <h6 class="fw-bold mb-1">
-                                    {{ $item->nama_hadiah }}
-                                </h6>
+                                <h6 class="fw-bold mb-1">{{ $item->nama_hadiah }}</h6>
                                 <p class="text-muted small mb-0">
                                     {{ number_format($item->poin_dipakai) }} poin
                                 </p>
@@ -132,12 +129,19 @@
                         <span class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-2 fw-bold small">
                             {{ strtoupper($item->status) }}
                         </span>
-
                     </div>
                 @endforeach
+
+                @if($riwayatTukarLatest->count() > 2)
+                    <div class="text-center mt-4">
+                        <button class="btn btn-link text-success fw-bold text-decoration-none small" data-bs-toggle="modal"
+                            data-bs-target="#allHistoryModal">
+                            Lihat Riwayat Lainnya <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                    </div>
+                @endif
             @endif
         </div>
-
 
         <div id="katalog-hadiah" class="d-flex justify-content-between align-items-end mb-4">
             <h4 class="fw-800 mb-0">Pilih Hadiah</h4>

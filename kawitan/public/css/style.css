@@ -1184,3 +1184,52 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 .btn-tertiary-primary.btn-sm {
     padding: 0.5rem 1.25rem;
 }
+
+        .card-custom {
+            border: none;
+            border-radius: 20px;
+            transition: transform 0.2s;
+        }
+
+        .card-custom:hover { transform: translateY(-3px); }
+
+        /* Card Poin Tinggi Sama */
+        .stat-card-compact {
+            padding: 1.25rem !important;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Container Card Utama untuk Eco Impact */
+        .eco-outer-card {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            border: none;
+        }
+
+        /* Card Gambar (Kiri) */
+        .eco-image-wrapper {
+            background-image: url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=1000'); /* Ganti dengan foto lokal kamu */
+            background-size: cover;
+            background-position: center;
+            min-height: 350px;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        /* Card Kecil di dalam (Kanan) */
+        .impact-mini-card {
+            background: #fdfdfd;
+            border: 1px solid #f1f5f9;
+            border-radius: 15px;
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .impact-mini-card:hover { border-color: #2ecc71; background: #f0fff4; }
+
+        .equal-height { height: 100%; }
