@@ -63,8 +63,8 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama</th>
-                                <th>Jenis</th>
+                                <th>Nama Penyetor</th>
+                                <th>Sampah</th>
                                 <th>Berat</th>
                                 <th>Poin</th>
                                 <th>CO₂</th>

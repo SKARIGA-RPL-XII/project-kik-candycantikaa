@@ -12,7 +12,7 @@
 
 <body class="dashboard-page">
 
-    @section('judulheader', 'Jenis Sampah')
+    @section('judulheader', 'Kelola Jenis Sampah')
     @section('keteranganheader', 'Daftar Jenis Sampah')
 
     @include('layout.sidebar_admin')
@@ -24,13 +24,17 @@
             <div class="card-body">
 
                 <div class="d-flex justify-content-between align-items-center search-button-table">
-                    <div class="d-flex gap-2">
-                        <input type="text" id="searchText" class="form-control" placeholder="Cari Data..."
-                            style="width:320px;">
-                        <button id="btnRefresh" class="form-control btn-refresh">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                    </div>
+
+                    <form method="GET">
+                        <div class="d-flex gap-2">
+                            <input type="text" name="search" class="form-control" placeholder="Cari Data..."
+                                style="width:320px;" value="{{ request('search') }}" oninput="this.form.submit()">
+
+                            <a href="{{ url()->current() }}" class="form-control btn-refresh">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </a>
+                        </div>
+                    </form>
 
                     <button class="btn-green" data-bs-toggle="modal" data-bs-target="#modalTambah">
                         + Tambah Jenis Sampah
@@ -50,7 +54,7 @@
                                 <th class="col-aksi">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="tableBody">
+                        <tbody>
 
                             @foreach ($data as $item)
                                 <tr>
@@ -65,7 +69,6 @@
                                             data-bs-target="#modalEdit{{ $item->id_jenis }}">
                                             <i class="bi bi-pencil"></i>
                                         </button>
-
 
                                         <button class="btn-action delete" data-id="{{ $item->id_jenis }}"
                                             onclick="showHapusModal(this)">
@@ -83,7 +86,6 @@
                             @endforeach
 
                         </tbody>
-
                     </table>
 
                     <div class="table-footer">
@@ -95,7 +97,6 @@
                             {{ $data->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
-
 
                 </div>
 
@@ -128,24 +129,6 @@
                                 required>
                         </div>
 
-
-                        <!-- <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">CO₂ / Kg</label>
-                                <input type="number" step="0.01" class="form-control" value="Otomatis" readonly>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Air / Kg</label>
-                                <input type="number" step="0.01" class="form-control" value="Otomatis" readonly>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Energi / Kg</label>
-                                <input type="number" step="0.01" class="form-control" value="Otomatis" readonly>
-                            </div>
-                        </div> -->
-
                         <p class="text-muted small">
                             * Nilai eco impact dihitung otomatis berdasarkan jenis sampah
                         </p>
@@ -166,7 +149,6 @@
         </div>
     </div>
 
-
     @foreach ($data as $item)
         <div class="modal fade" id="modalEdit{{ $item->id_jenis }}" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -184,37 +166,14 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Jenis Sampah</label>
-                                <input type="text" name="nama_jenis" class="form-control" value="{{ $item->nama_jenis }}"
-                                    required>
+                                <input type="text" class="form-control" value="{{ $item->nama_jenis }}" readonly>
                             </div>
 
-                            <!-- <div class="row"> -->
                             <div class="mb-3">
                                 <label class="form-label">Poin / Kg</label>
                                 <input type="number" name="poin_per_kg" class="form-control"
                                     value="{{ $item->poin_per_kg }}" required>
                             </div>
-
-                            <!-- <div class="col-md-6 mb-3">
-                                                                    <label class="form-label">CO₂ / Kg</label>
-                                                                    <input type="number" step="0.01" name="co2_per_kg" class="form-control"
-                                                                        value="{{ $item->co2_per_kg }}" required>
-                                                                </div> -->
-                            <!-- </div> -->
-
-                            <!-- <div class="row">
-                                                                <div class="col-md-6 mb-3">
-                                                                    <label class="form-label">Air / Kg</label>
-                                                                    <input type="number" step="0.01" name="air_per_kg" class="form-control"
-                                                                        value="{{ $item->air_per_kg }}" required>
-                                                                </div>
-
-                                                                <div class="col-md-6 mb-3">
-                                                                    <label class="form-label">Energi / Kg</label>
-                                                                    <input type="number" step="0.01" name="energi_per_kg" class="form-control"
-                                                                        value="{{ $item->energi_per_kg }}" required>
-                                                                </div>
-                                                            </div> -->
 
                             <p class="text-muted small">
                                 * Nilai eco impact dihitung otomatis berdasarkan jenis sampah
@@ -236,7 +195,6 @@
             </div>
         </div>
     @endforeach
-
 
     <div class="modal fade" id="modalKonfirmasiHapus" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -287,7 +245,7 @@
                 <div class="icon-circle-danger">
                     <i class="bi bi-trash text-danger fs-2"></i>
                 </div>
-                <h5>Data Jenis Sampah Berhasil Dihapus</h5>
+                <h5>Data Berhasil Dihapus</h5>
                 <p class="text-muted">Data telah dihapus dari sistem.</p>
                 <button class="btn-green w-100" data-bs-dismiss="modal">OK</button>
             </div>
@@ -301,51 +259,48 @@
 
             let idHapus = null;
 
-            const btnYaHapus = document.getElementById('btnYaHapus');
-            const searchText = document.getElementById('searchText');
-            const btnRefresh = document.getElementById('btnRefresh');
-
             window.showHapusModal = function (btn) {
                 idHapus = btn.dataset.id;
                 new bootstrap.Modal(document.getElementById('modalKonfirmasiHapus')).show();
             };
 
-            if (btnYaHapus) {
-                btnYaHapus.addEventListener('click', function () {
-                    if (idHapus) {
-                        document.getElementById('formHapus' + idHapus).submit();
-                    }
-                });
-            }
-
-            if (searchText) {
-                searchText.addEventListener('input', function () {
-                    let v = this.value.toLowerCase();
-                    document.querySelectorAll('#tableBody tr').forEach(r => {
-                        r.style.display = r.textContent.toLowerCase().includes(v) ? '' : 'none';
-                    });
-                });
-            }
-
-            if (btnRefresh) {
-                btnRefresh.addEventListener('click', function () {
-                    searchText.value = '';
-                    document.querySelectorAll('#tableBody tr').forEach(r => r.style.display = '');
-                });
-            }
+            document.getElementById('btnYaHapus')?.addEventListener('click', function () {
+                if (idHapus) {
+                    document.getElementById('formHapus' + idHapus).submit();
+                }
+            });
 
         });
     </script>
 
-
     @if (session('tambah_success'))
-        <script>new bootstrap.Modal(document.getElementById('modalBerhasilTambah')).show();</script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(() => {
+                    new bootstrap.Modal(document.getElementById('modalBerhasilTambah')).show();
+                }, 200);
+            });
+        </script>
     @endif
+
     @if (session('edit_success'))
-        <script>new bootstrap.Modal(document.getElementById('modalBerhasilEdit')).show();</script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(() => {
+                    new bootstrap.Modal(document.getElementById('modalBerhasilEdit')).show();
+                }, 200);
+            });
+        </script>
     @endif
+
     @if (session('hapus_success'))
-        <script>new bootstrap.Modal(document.getElementById('modalBerhasilHapus')).show();</script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(() => {
+                    new bootstrap.Modal(document.getElementById('modalBerhasilHapus')).show();
+                }, 200);
+            });
+        </script>
     @endif
 
 </body>

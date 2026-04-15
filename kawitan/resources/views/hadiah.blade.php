@@ -24,12 +24,21 @@
         <div class="card-body">
 
             <div class="d-flex justify-content-between align-items-center search-button-table">
-                <div class="d-flex gap-2">
-                    <input type="text" id="searchText" class="form-control" placeholder="Cari Data..." style="width:320px;">
-                    <button id="btnRefresh" class="form-control btn-refresh">
-                        <i class="bi bi-arrow-clockwise"></i>
-                    </button>
-                </div>
+                <!-- <div class="d-flex gap-2"> -->
+                    
+                    <form method="GET" action="{{ route('hadiah.index') }}">
+                        <div class="d-flex gap-2">
+                            <input type="text" name="search" class="form-control"
+                                placeholder="Cari Data..."
+                                style="width:320px;"
+                                value="{{ request('search') }}"
+                                oninput="this.form.submit()">
+
+                            <a href="{{ route('hadiah.index') }}" class="form-control btn-refresh">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </a>
+                        </div>
+                    </form>      
 
                 <button class="btn-green" data-bs-toggle="modal" data-bs-target="#modalTambah">
                     + Tambah Hadiah
@@ -288,18 +297,6 @@ document.getElementById('btnYaHapus').addEventListener('click', function () {
     }
 });
 
-// SEARCH
-document.getElementById('searchText').addEventListener('input', function () {
-    let v = this.value.toLowerCase();
-    document.querySelectorAll('#tableBody tr').forEach(r => {
-        r.style.display = r.textContent.toLowerCase().includes(v) ? '' : 'none';
-    });
-});
-
-document.getElementById('btnRefresh').addEventListener('click', function () {
-    searchText.value = '';
-    document.querySelectorAll('#tableBody tr').forEach(r => r.style.display = '');
-});
 </script>
 
 @if (session('tambah_success'))

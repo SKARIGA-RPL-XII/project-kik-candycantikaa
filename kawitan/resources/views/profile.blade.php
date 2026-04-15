@@ -41,25 +41,21 @@
 
                     <div class="row g-4">
                         <div class="col-12">
-                            <label class="form-label-custom">Nama Lengkap</label>
+                            <label class="form-label-custom">Nama Pengguna</label>
                             <input type="text" name="name" class="form-control form-control-custom"
                                 value="{{ old('name', $user->username) }}" placeholder="Masukkan nama lengkap">
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label-custom">Alamat Email</label>
+                            <label class="form-label-custom">Email</label>
                             <input type="email" name="email" class="form-control form-control-custom"
-                                value="{{ old('email', $user->email) }}" placeholder="email@anda.com">
+                                value="{{ old('email', $user->email) }}" placeholder="email@anda.com" readonly>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label-custom">Nomor Telepon</label>
-                            <div class="input-group">
-                                <span class="input-group-text border-0 bg-light px-3"
-                                    style="border-radius: 15px 0 0 15px; font-weight: 700; color: #64748b;">+62</span>
-                                <input type="text" name="phone" class="form-control form-control-custom"
-                                    value="{{ old('phone', $user->tlpn) }}" style="border-radius: 0 15px 15px 0;">
-                            </div>
+                            <input type="text" class="form-control form-control-custom" value="{{ $user->tlpn }}"
+                                readonly>
                         </div>
                     </div>
 
@@ -69,7 +65,7 @@
 
                     <div class="row g-4">
                         <div class="col-md-6">
-                            <label class="form-label-custom">Password Baru</label>
+                            <label class="form-label-custom">Kata Sandi Baru</label>
                             <div class="position-relative">
                                 <input type="password" name="password" class="form-control form-control-custom"
                                     placeholder="Minimal 6 karakter">
@@ -79,7 +75,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label-custom">Konfirmasi Password Baru</label>
+                            <label class="form-label-custom">Konfirmasi Kata Sandi Baru</label>
                             <div class="position-relative">
                                 <input type="password" name="password_confirmation"
                                     class="form-control form-control-custom" placeholder="Ulangi password">
@@ -92,7 +88,7 @@
                             <div class="p-3 rounded-3 bg-light border-start border-4 border-warning">
                                 <small class="text-muted d-block">
                                     <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>
-                                    Biarkan kolom password kosong jika Anda tidak ingin mengubahnya.
+                                    Anda hanya diperbolehkan untuk mengubah nama pengguna dan kata sandi akun.
                                 </small>
                             </div>
                         </div>

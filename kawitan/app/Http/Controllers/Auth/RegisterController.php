@@ -19,10 +19,11 @@ class RegisterController extends Controller
         $request->validate([
             'username' => 'required|string|max:50',
             'email' => 'required|email|unique:users,email',
-            'tlpn' => 'required|string|max:15',
+            'tlpn' => 'required|string|max:15|unique:users,tlpn',
             'password' => 'required|min:6|confirmed',
         ], [
             'email.unique' => 'Email sudah terdaftar',
+            'tlpn.unique' => 'Nomor HP sudah terdaftar',
             'password.min' => 'Kata sandi minimal 6 karakter',
             'password.confirmed' => 'Konfirmasi kata sandi tidak sama',
         ]);
@@ -33,6 +34,8 @@ class RegisterController extends Controller
             'tlpn' => $request->tlpn,
             'password' => Hash::make($request->password),
             'role' => 'user',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil, silakan login');

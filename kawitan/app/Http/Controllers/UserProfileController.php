@@ -21,8 +21,6 @@ class UserProfileController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,' . $user->id_user . ',id_user',
-            'phone' => 'required|string|max:15',
             'password' => 'nullable|min:6|confirmed',
         ], [
             'password.min' => 'Password minimal 6 karakter',
@@ -30,17 +28,15 @@ class UserProfileController extends Controller
         ]);
 
         $user->username = $request->name;
-        $user->email = $request->email;
-        $user->tlpn = $request->phone;
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        Session::put('username', $user->username);
+
+        return back()->with('success', 'Profile berhasil diperbarui');
     }
-
-    $user->save();
-
-    Session::put('username', $user->username);
-
-    return back()->with('success','Profile berhasil diperbarui');
-}
 }

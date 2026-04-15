@@ -4,13 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderBy('created_at', 'desc')
-            ->paginate(10);
+        $search = $request->search;
+
+        $users = User::when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('username', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('tlpn', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('kelola_user', compact('users'));
     }
@@ -19,24 +30,25 @@ class UserController extends Controller
     {
         $request->validate([
             'username' => 'required|string|max:50',
-            'email' => 'required|email|unique:users,email,' . $id_user . ',id_user',
-            'tlpn' => 'nullable|string|max:15',
-        ], [
-            'email.unique' => 'Email sudah digunakan oleh user lain',
         ]);
 
-        User::where('id_user', $id_user)->update([
+        $data = [
             'username' => $request->username,
-            'email' => $request->email,
-            'tlpn' => $request->tlpn,
-        ]);
+        ];
 
-        return back()->with('edit_success', true);
+        if ($request->has('reset_password')) {
+            $data['password'] = Hash::make('password123');
+        }
+
+        User::where('id_user', $id_user)->update($data);
+
+        return redirect()->route('kelola_user')->with('edit_success', true);
     }
 
     public function destroy($id_user)
     {
         User::where('id_user', $id_user)->delete();
-        return back()->with('hapus_success', true);
+
+        return redirect()->route('kelola_user')->with('hapus_success', true);
     }
 }

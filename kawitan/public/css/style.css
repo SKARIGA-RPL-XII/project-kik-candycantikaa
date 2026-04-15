@@ -517,9 +517,8 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 }
 
 .table-footer {
-    display: grid;
-    grid-template-columns: 1fr 120px;
-    /* 120px = lebar kolom AKSI */
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 
     margin-top: 14px;
@@ -554,6 +553,7 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 .table-footer-right .page-link {
     border-radius: 8px;
     padding: 6px 14px;
+    color: #1b5e20;
 }
 
 .table-footer-right .page-item.active .page-link {
@@ -619,7 +619,7 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     padding-top: 160px;
     padding-bottom: 120px;
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)),
-        url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2041&auto=format&fit=crop');
+        url('/images/hero.avif');
     background-size: cover;
     background-position: center;
     border-radius: 0 0 60px 60px;
@@ -1185,51 +1185,146 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     padding: 0.5rem 1.25rem;
 }
 
-        .card-custom {
-            border: none;
-            border-radius: 20px;
-            transition: transform 0.2s;
-        }
+.card-custom {
+    border: none;
+    border-radius: 20px;
+    transition: transform 0.2s;
+}
 
-        .card-custom:hover { transform: translateY(-3px); }
+.card-custom:hover {
+    transform: translateY(-3px);
+}
 
-        /* Card Poin Tinggi Sama */
-        .stat-card-compact {
-            padding: 1.25rem !important;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+/* Card Poin Tinggi Sama */
+.stat-card-compact {
+    padding: 1.25rem !important;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-        /* Container Card Utama untuk Eco Impact */
-        .eco-outer-card {
-            background: white;
-            border-radius: 30px;
-            overflow: hidden;
-            border: none;
-        }
+/* Container Card Utama untuk Eco Impact */
+.eco-outer-card {
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    border: none;
+}
 
-        /* Card Gambar (Kiri) */
-        .eco-image-wrapper {
-            background-image: url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=1000'); /* Ganti dengan foto lokal kamu */
-            background-size: cover;
-            background-position: center;
-            min-height: 350px;
-            height: 100%;
-            border-radius: 20px;
-        }
+/* Card Gambar (Kiri) */
+.eco-image-wrapper {
+    background-image: url('/images/eco.avif');
+    /* Ganti dengan foto lokal kamu */
+    background-size: cover;
+    background-position: center;
+    min-height: 350px;
+    height: 100%;
+    border-radius: 20px;
+}
 
-        /* Card Kecil di dalam (Kanan) */
-        .impact-mini-card {
-            background: #fdfdfd;
-            border: 1px solid #f1f5f9;
-            border-radius: 15px;
-            padding: 12px 15px;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-        }
+/* Card Kecil di dalam (Kanan) */
+.impact-mini-card {
+    background: #fdfdfd;
+    border: 1px solid #f1f5f9;
+    border-radius: 15px;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
 
-        .impact-mini-card:hover { border-color: #2ecc71; background: #f0fff4; }
+.impact-mini-card:hover {
+    border-color: #2ecc71;
+    background: #f0fff4;
+}
 
-        .equal-height { height: 100%; }
+.equal-height {
+    height: 100%;
+}
+
+.btn-action.reset {
+    background: #fff4e5;
+    color: #fd7e14;
+}
+
+.btn-action.reset:hover {
+    background: #fd7e14;
+    color: #fff;
+}
+
+/* Badge Status Penukaran Poin */
+.badge-status {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* MENUNGGU */
+.badge-pending {
+    background: linear-gradient(135deg, #ffe259, #ffa751);
+    color: #5a3b00;
+}
+
+/* DISETUJUI */
+.badge-approved {
+    background: linear-gradient(135deg, #00c853, #64dd17);
+    color: #ffffff;
+}
+
+/* DITOLAK */
+.badge-rejected {
+    background: linear-gradient(135deg, #ff5252, #ff1744);
+    color: #ffffff;
+}
+
+.donut-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/* Custom Styles for History Page */
+.fw-800 {
+    font-weight: 800;
+}
+
+.history-item-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-left-width: 4px !important;
+}
+
+.history-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+    background-color: #fcfdfc !important;
+}
+
+.icon-box-history, .icon-step, .modal-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.impact-icon {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.modal-content {
+    border-radius: 28px !important;
+}
+
+.bg-success-light {
+    background-color: rgba(46, 125, 50, 0.1);
+}

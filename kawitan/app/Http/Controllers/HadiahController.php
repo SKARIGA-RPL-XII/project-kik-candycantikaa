@@ -8,9 +8,21 @@ use Illuminate\Support\Facades\Storage;
 
 class HadiahController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $hadiah = Hadiah::orderBy('id_hadiah', 'desc')->paginate(10);
+        $query = Hadiah::orderBy('id_hadiah', 'desc');
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_hadiah', 'like', '%' . $request->search . '%')
+                    ->orWhere('deskripsi', 'like', '%' . $request->search . '%')
+                    ->orWhere('poin_dibutuhkan', 'like', '%' . $request->search . '%')
+                    ->orWhere('stok', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $hadiah = $query->paginate(10)->withQueryString();
+
         return view('hadiah', compact('hadiah'));
     }
 

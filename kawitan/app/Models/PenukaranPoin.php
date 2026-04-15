@@ -2,18 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\RiwayatPoin;
+use App\Models\Hadiah;
 
 class PenukaranPoin extends Model
 {
-    use HasFactory;
-
-
     protected $table = 'penukaran_poin';
     protected $primaryKey = 'id_penukaran';
     public $timestamps = false;
-
 
     protected $fillable = [
         'id_riwayat',
@@ -23,11 +20,9 @@ class PenukaranPoin extends Model
         'status',
     ];
 
-
-
-    public function riwayatSetoran()
+    public function riwayatPoin()
     {
-        return $this->belongsTo(RiwayatSetoran::class, 'id_riwayat', 'id_riwayat');
+        return $this->belongsTo(RiwayatPoin::class, 'id_riwayat', 'id_riwayat');
     }
 
     public function hadiah()

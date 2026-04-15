@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Data Eco Impact</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -11,25 +12,30 @@
 
 <body class="dashboard-page">
 
-    @section('judulheader', 'Eco Impact')
-    @section('keteranganheader', 'Laporan Data Eco Impact Keseluruhan')
+    @section('judulheader', 'Laporan Eco Impact')
+    @section('keteranganheader', 'Daftar Keseluruhan Eco Impact Oleh Nasabah')
 
     @include('layout.sidebar_admin')
     @include('layout.header_admin')
 
     <div class="main-content">
 
-        <div class="card shadow-sm mt-4">
+        <div class="card shadow-sm mt-2">
             <div class="card-body">
 
-                <div class="d-flex align-items-center gap-2 mb-3">
-                    <input type="text" id="searchText" class="form-control" placeholder="Cari Data..."
-                        style="width: 400px;">
+                <form method="GET" action="{{ route('eco_admin') }}" class="d-flex align-items-center gap-2 mb-3">
 
-                    <button id="btnRefresh" class="form-control btn-refresh" title="Reset Filter">
+                    <input type="text" name="search" class="form-control"
+                        placeholder="Cari Data..."
+                        style="width: 400px;"
+                        value="{{ request('search') }}"
+                        oninput="this.form.submit()">
+
+                    <a href="{{ route('eco_admin') }}" class="form-control btn-refresh">
                         <i class="bi bi-arrow-clockwise"></i>
-                    </button>
-                </div>
+                    </a>
+
+                </form>
 
                 <div class="table-wrapper">
                     <table class="table align-middle mb-0">
@@ -43,59 +49,48 @@
                                 <th>Energi Hemat</th>
                             </tr>
                         </thead>
+
                         <tbody id="tableBody">
-                            <tr>
-                                <td>1</td>
-                                <td>Plastik</td>
-                                <td>120 kg</td>
-                                <td>180 kg</td>
-                                <td>3600 L</td>
-                                <td>240 kWh L</td>
-                            </tr>
+                            @forelse ($data as $i => $row)
+                                <tr>
+                                    <td>{{ $data->firstItem() + $i }}</td>
+                                    <td>{{ $row->nama_jenis }}</td>
+                                    <td>{{ $row->total_berat }} kg</td>
+                                    <td>{{ $row->co2 }} kg</td>
+                                    <td>{{ $row->air }} L</td>
+                                    <td>{{ $row->energi }} kWh</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">Data tidak tersedia</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
 
+                    <div class="table-footer">
+                        <div class="table-footer-left">
+                            Showing
+                            {{ $data->firstItem() }}
+                            to
+                            {{ $data->lastItem() }}
+                            of
+                            {{ $data->total() }} results
+                        </div>
 
-                            <script
-                                src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+                        <div class="table-footer-right">
+                            {{ $data->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
 
+                </div>
 
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    const searchText = document.getElementById("searchText");
+            </div>
+        </div>
 
-                                    if (searchText) {
-                                        searchText.addEventListener("input", filterTable);
-                                    }
+    </div>
 
-                                    if (btnRefresh) {
-                                        btnRefresh.addEventListener("click", function () {
-                                            searchText.value = "";
-
-                                            const rows = document.querySelectorAll("#tableBody tr");
-                                            rows.forEach(row => {
-                                                row.style.display = "";
-                                            });
-                                        });
-                                    }
-
-                                });
-
-                                function filterTable() {
-                                    const input = document.getElementById("searchText").value.toLowerCase();
-                                    const rows = document.querySelectorAll("tbody tr");
-
-                                    rows.forEach(row => {
-                                        const text = row.textContent.toLowerCase();
-                                        if (text.includes(input)) {
-                                            row.style.display = "";
-                                        } else {
-                                            row.style.display = "none";
-                                        }
-                                    });
-                                }
-                            </script>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>

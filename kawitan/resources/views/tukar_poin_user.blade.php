@@ -102,14 +102,14 @@
         </div>
 
         <div class="history-card-wrapper p-4 shadow-sm border-0 bg-white mb-5">
-            @if($riwayatTukarLatest->count() == 0)
+            @if($riwayatTukarAll->count() == 0)
                 <div class="text-center py-5">
                     <i class="bi bi-box2-heart text-light d-block mb-3" style="font-size: 4rem;"></i>
                     <h5 class="fw-bold">Belum ada penukaran hadiah</h5>
                     <p class="text-muted small mb-0">Riwayat penukaran hadiah akan muncul di sini.</p>
                 </div>
             @else
-                @foreach($riwayatTukarLatest->take(2) as $item)
+                @foreach($riwayatTukarAll->take(2) as $item)
                     <div class="history-item-card d-flex align-items-center justify-content-between p-3 rounded-4 bg-white shadow-sm border-start border-4 mb-3"
                         style="border-left-color: #2ecc71">
 
@@ -126,13 +126,28 @@
                             </div>
                         </div>
 
-                        <span class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-2 fw-bold small">
+                      @php
+                            $status = strtolower($item->status);
+
+                            if ($status == 'menunggu') {
+                                $bg = 'bg-warning-subtle';
+                                $text = 'text-warning';
+                            } elseif ($status == 'ditolak') {
+                                $bg = 'bg-danger-subtle';
+                                $text = 'text-danger';
+                            } else {
+                                $bg = 'bg-success-subtle';
+                                $text = 'text-success';
+                            }
+                        @endphp
+
+                        <span class="badge {{ $bg }} {{ $text }} rounded-pill px-3 py-2 fw-bold small">
                             {{ strtoupper($item->status) }}
                         </span>
                     </div>
                 @endforeach
 
-                @if($riwayatTukarLatest->count() > 2)
+                @if($riwayatTukarAll->count() > 2)
                     <div class="text-center mt-4">
                         <button class="btn btn-link text-success fw-bold text-decoration-none small" data-bs-toggle="modal"
                             data-bs-target="#allHistoryModal">
@@ -159,7 +174,12 @@
                         </div>
 
                         <div class="card-body p-4 text-center">
-                            <h6 class="fw-bold mb-3">{{ $item->nama_hadiah }}</h6>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="fw-bold mb-0">{{ $item->nama_hadiah }}</h6>
+                                <span class="badge bg-light text-muted small">
+                                    Stok {{ $item->stok }}
+                                </span>
+                            </div>
 
                             <button class="btn btn-dark w-100 rounded-pill py-2 fw-bold" data-bs-toggle="modal"
                                 data-bs-target="#detailModal" data-id="{{ $item->id_hadiah }}"
@@ -198,9 +218,21 @@
                                         </small>
                                     </div>
                                 </div>
-                                <span class="badge bg-success rounded-pill fw-bold" style="font-size: 0.7rem;">
-                                    {{ strtoupper($item->status) }}
-                                </span>
+                              @php
+                                $status = strtolower($item->status);
+
+                                if ($status == 'menunggu') {
+                                    $bg = 'bg-warning';
+                                } elseif ($status == 'ditolak') {
+                                    $bg = 'bg-danger';
+                                } else {
+                                    $bg = 'bg-success';
+                                }
+                            @endphp
+
+                            <span class="badge {{ $bg }} rounded-pill fw-bold" style="font-size: 0.7rem;">
+                                {{ strtoupper($item->status) }}
+                            </span>
                             </div>
                         @endforeach
                     </div>

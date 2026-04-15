@@ -54,12 +54,14 @@
                             <hr class="dropdown-divider opacity-50">
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center p-2 text-danger" href="/login"
-                                style="border-radius: 12px;">
+                            <a class="dropdown-item d-flex align-items-center p-2 text-danger" href="#"
+                                data-bs-toggle="modal" data-bs-target="#logoutModal" style="border-radius: 12px;">
+
                                 <div class="icon-circle me-2"
                                     style="width: 30px; height: 30px; background: #ffebee; color: #c62828; display: flex; align-items: center; justify-content: center;">
                                     <i class="bi bi-box-arrow-right"></i>
                                 </div>
+
                                 <span class="fw-bold">Keluar</span>
                             </a>
                         </li>
@@ -67,5 +69,36 @@
                 </div>
             </div>
         </nav>
+
+    </div>
+</div>
+
+<div class="modal fade" id="logoutModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+
+            <div class="modal-body text-center p-4">
+                <i class="bi bi-box-arrow-right text-danger" style="font-size: 2rem;"></i>
+
+                <h5 class="mt-3 fw-bold">Konfirmasi Keluar</h5>
+                <p class="text-muted">Apakah Anda yakin ingin keluar dari aplikasi?</p>
+
+                <div class="d-flex justify-content-center gap-2 mt-3">
+
+                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">
+                        Batal
+                    </button>
+
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger px-4">
+                            Ya, Keluar
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>

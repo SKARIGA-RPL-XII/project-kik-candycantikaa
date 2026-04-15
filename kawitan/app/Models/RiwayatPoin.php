@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class RiwayatPoin extends Model
 {
@@ -12,7 +13,7 @@ class RiwayatPoin extends Model
 
     protected $fillable = [
         'id_user',
-        'poin',          
+        'poin',
         'jumlah_poin',
         'keterangan',
     ];

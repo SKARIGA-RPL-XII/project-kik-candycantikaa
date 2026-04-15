@@ -34,7 +34,7 @@
                         <div>
                             <small class="fw-bold opacity-75">TOTAL SALDO</small>
                             <div class="d-flex align-items-baseline gap-2">
-                                <h2 class="fw-800 mb-0">{{ number_format($saldo ?? 1200) }}</h2>
+                                <h2 class="fw-800 mb-0">{{ number_format($saldo) }}</h2>
                                 <small>poin</small>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <small class="text-muted fw-bold">POIN MASUK</small>
-                            <h3 class="fw-800 text-success mb-0">+{{ number_format($poinMasuk ?? 2450) }}</h3>
+                            <h3 class="fw-800 text-success mb-0">+{{ number_format($poinMasuk) }}</h3>
                         </div>
                         <div class="icon-circle bg-success-subtle">
                             <i class="bi bi-arrow-down-left text-success fs-4"></i>
@@ -62,7 +62,7 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <small class="text-muted fw-bold">POIN KELUAR</small>
-                            <h3 class="fw-800 text-danger mb-0">-{{ number_format($poinKeluar ?? 500) }}</h3>
+                            <h3 class="fw-800 text-danger mb-0">-{{ number_format($poinKeluar) }}</h3>
                         </div>
                         <div class="icon-circle bg-danger-subtle">
                             <i class="bi bi-arrow-up-right text-danger fs-4"></i>
@@ -85,30 +85,36 @@
                             kelestarian alam secara nyata.</p>
 
                         <div class="impact-mini-card d-flex align-items-center">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3015/3015112.png" style="width: 35px;"
+                            <img src={{ asset('images/co2.png') }} style="width: 35px;"
                                 class="me-3">
                             <div>
-                                <h6 class="fw-800 mb-0">100 kg CO₂</h6>
+                                <h6 class="fw-800 mb-0">
+                                    {{ rtrim(rtrim(number_format($eco->total_co2, 2), '0'), '.') }} kg CO₂
+                                </h6>
                                 <p class="text-muted mb-0" style="font-size: 11px;">Berhasil mencegah emisi karbon
                                     di udara.</p>
                             </div>
                         </div>
 
                         <div class="impact-mini-card d-flex align-items-center">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3105/3105807.png" style="width: 35px;"
+                            <img src={{ asset('images/air.png') }} style="width: 35px;"
                                 class="me-3">
                             <div>
-                                <h6 class="fw-800 mb-0">1.000 L Air</h6>
+                                <h6 class="fw-800 mb-0">
+                                    {{ number_format($eco->total_air) }} L Air
+                                </h6>
                                 <p class="text-muted mb-0" style="font-size: 11px;">Menghemat penggunaan air dalam
                                     proses produksi.</p>
                             </div>
                         </div>
 
                         <div class="impact-mini-card d-flex align-items-center">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3105/3105779.png" style="width: 35px;"
+                            <img src={{ asset('images/kwh.png') }} style="width: 35px;"
                                 class="me-3">
                             <div>
-                                <h6 class="fw-800 mb-0">2.5 kWh Energi</h6>
+                                <h6 class="fw-800 mb-0">
+                                    {{ rtrim(rtrim(number_format($eco->total_energi, 2), '0'), '.') }} kWh Energi
+                                </h6>
                                 <p class="text-muted mb-0" style="font-size: 11px;">Energi yang dihemat dari proses
                                     daur ulang.</p>
                             </div>

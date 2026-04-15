@@ -8,12 +8,25 @@ use Illuminate\Http\Request;
 class JenisSampahController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = JenisSampah::orderBy('id_jenis', 'desc')->paginate(10);
+        $search = $request->search;
+
+        $data = JenisSampah::when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_jenis', 'like', "%{$search}%")
+                    ->orWhere('poin_per_kg', 'like', "%{$search}%")
+                    ->orWhere('co2_per_kg', 'like', "%{$search}%")
+                    ->orWhere('air_per_kg', 'like', "%{$search}%")
+                    ->orWhere('energi_per_kg', 'like', "%{$search}%");
+            });
+        })
+            ->orderBy('id_jenis', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('jenis_sampah', compact('data'));
     }
-
 
     public function store(Request $request)
     {
@@ -35,7 +48,6 @@ class JenisSampahController extends Controller
     public function update(Request $request, $id)
     {
         JenisSampah::where('id_jenis', $id)->update([
-            'nama_jenis' => $request->nama_jenis,
             'poin_per_kg' => $request->poin_per_kg,
         ]);
 
