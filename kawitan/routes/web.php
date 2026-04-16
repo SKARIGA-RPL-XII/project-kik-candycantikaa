@@ -39,7 +39,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'show'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-Route::middleware(['checkLogin', 'admin'])->group(function () {
+Route::middleware(['checkLogin', 'checkPasswordChange', 'admin'])->group(function () {
 
     // Dashboard
     Route::get('/dashboard_admin', [DashboardAdminController::class, 'index'])->name('dashboard_admin');
@@ -91,7 +91,7 @@ Route::middleware(['checkLogin', 'admin'])->group(function () {
 });
 
 
-Route::middleware(['checkLogin', 'user'])->group(function () {
+Route::middleware(['checkLogin', 'checkPasswordChange', 'user'])->group(function () {
 
     // Dashboard
     // Route::get('/dashboard_user', [UserDashboardController::class, 'index'])

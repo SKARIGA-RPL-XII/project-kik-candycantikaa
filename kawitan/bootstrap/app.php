@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'checkLogin' => CheckLogin::class,
             'admin' => CheckAdmin::class,
             'user' => CheckUser::class,
+            'checkPasswordChange' => \App\Http\Middleware\CheckPasswordChange::class,
         ]);
 
 

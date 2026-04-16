@@ -12,12 +12,10 @@ class LoginController extends Controller
 {
     public function store(Request $request)
     {
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
 
         $user = User::where('email', $request->email)->first();
 
@@ -27,25 +25,29 @@ class LoginController extends Controller
             ])->withInput();
         }
 
-
         if (!Hash::check($request->password, $user->password)) {
             return back()->withErrors([
                 'password' => 'Kata sandi salah',
             ])->withInput();
         }
 
+        if ($user->password_reset == 1) {
+            return back()->withErrors([
+                'password' => 'Password telah direset admin, silakan login ulang.',
+            ]);
+        }
 
         Session::put('login', true);
         Session::put('id_user', $user->id_user);
         Session::put('username', $user->username);
         Session::put('role', $user->role);
-
+        Session::put('password_changed_at', $user->password_changed_at);
 
         if ($user->role === 'admin') {
             return redirect('/dashboard_admin');
         }
 
-        return redirect('/dashboard_user'); 
+        return redirect('/dashboard_user');
     }
 
     public function logout()

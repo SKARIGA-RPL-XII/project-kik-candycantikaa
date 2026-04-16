@@ -41,6 +41,12 @@
                     </div>
                 @endif
 
+                @if (session('error'))
+                    <div class="alert alert-warning">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <form action="{{ route('login.store') }}" method="POST">
                     @csrf
 
