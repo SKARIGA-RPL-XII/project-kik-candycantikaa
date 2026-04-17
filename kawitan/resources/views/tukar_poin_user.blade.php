@@ -111,7 +111,10 @@
             @else
                 @foreach($riwayatTukarAll->take(2) as $item)
                     <div class="history-item-card d-flex align-items-center justify-content-between p-3 rounded-4 bg-white shadow-sm border-start border-4 mb-3"
-                        style="border-left-color: #2ecc71">
+                        style="border-left-color: #2ecc71; cursor:pointer" data-bs-toggle="modal"
+                        data-bs-target="#detailRiwayatModal" data-status="{{ $item->status }}"
+                        data-hadiah="{{ $item->nama_hadiah }}" data-poin="{{ number_format($item->poin_dipakai) }}"
+                        data-keterangan="{{ $item->keterangan }}">
 
                         <div class="d-flex align-items-center">
                             <div class="icon-circle bg-success-subtle text-success me-3 d-none d-md-flex">
@@ -126,7 +129,7 @@
                             </div>
                         </div>
 
-                      @php
+                        @php
                             $status = strtolower($item->status);
 
                             if ($status == 'menunggu') {
@@ -218,21 +221,21 @@
                                         </small>
                                     </div>
                                 </div>
-                              @php
-                                $status = strtolower($item->status);
+                                @php
+                                    $status = strtolower($item->status);
 
-                                if ($status == 'menunggu') {
-                                    $bg = 'bg-warning';
-                                } elseif ($status == 'ditolak') {
-                                    $bg = 'bg-danger';
-                                } else {
-                                    $bg = 'bg-success';
-                                }
-                            @endphp
+                                    if ($status == 'menunggu') {
+                                        $bg = 'bg-warning';
+                                    } elseif ($status == 'ditolak') {
+                                        $bg = 'bg-danger';
+                                    } else {
+                                        $bg = 'bg-success';
+                                    }
+                                @endphp
 
-                            <span class="badge {{ $bg }} rounded-pill fw-bold" style="font-size: 0.7rem;">
-                                {{ strtoupper($item->status) }}
-                            </span>
+                                <span class="badge {{ $bg }} rounded-pill fw-bold" style="font-size: 0.7rem;">
+                                    {{ strtoupper($item->status) }}
+                                </span>
                             </div>
                         @endforeach
                     </div>
@@ -275,17 +278,102 @@
         </div>
     </div>
 
+    <div class="modal fade" id="detailRiwayatModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-0 text-center">
+                    <div id="statusIconWrapper" class="mx-auto mb-4 d-flex align-items-center justify-content-center"
+                        style="width: 80px; height: 80px; border-radius: 50%;">
+                        <i id="mainStatusIcon" class="bi fs-1"></i>
+                    </div>
+
+                    <h4 class="fw-800 mb-1" id="detailHadiah"></h4>
+                    <p class="text-muted mb-4">Detail Penukaran Hadiah</p>
+
+                    <div class="bg-light rounded-4 p-3 mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted small">Status Transaksi</span>
+                            <div id="detailStatus"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Poin Digunakan</span>
+                            <h5 class="fw-bold text-dark mb-0" id="detailPoin"></h5>
+                        </div>
+                    </div>
+
+                    <div class="text-start mb-4">
+                        <label class="small fw-bold text-muted mb-2 d-block">Keterangan / Pesan:</label>
+                        <div class="p-3 bg-white border rounded-4">
+                            <p id="detailKeterangan" class="small mb-0 text-secondary" style="line-height: 1.6;"></p>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-dark w-100 rounded-pill py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
+                        Mengerti
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const detailModal = document.getElementById('detailModal');
-        detailModal.addEventListener('show.bs.modal', event => {
-            const btn = event.relatedTarget;
-            document.getElementById('modalHadiahId').value = btn.dataset.id;
-            document.getElementById('modalName').innerText = btn.dataset.nama;
-            document.getElementById('modalPoints').innerText = btn.dataset.poin;
-            document.getElementById('modalImg').src = btn.dataset.img;
-            document.getElementById('modalDesc').innerText = btn.dataset.desc;
-        });
+
+        if (detailModal) {
+            detailModal.addEventListener('show.bs.modal', event => {
+                const btn = event.relatedTarget;
+
+                document.getElementById('modalHadiahId').value = btn.dataset.id;
+                document.getElementById('modalName').innerText = btn.dataset.nama;
+                document.getElementById('modalPoints').innerText = btn.dataset.poin;
+                document.getElementById('modalImg').src = btn.dataset.img;
+                document.getElementById('modalDesc').innerText = btn.dataset.desc;
+            });
+        }
+
+        const detailRiwayatModal = document.getElementById('detailRiwayatModal');
+
+        if (detailRiwayatModal) {
+            detailRiwayatModal.addEventListener('show.bs.modal', function (event) {
+                const btn = event.relatedTarget;
+
+                const status = btn.dataset.status.toLowerCase();
+                const hadiah = btn.dataset.hadiah;
+                const poin = btn.dataset.poin;
+                const keterangan = btn.dataset.keterangan;
+
+                document.getElementById('detailHadiah').innerText = hadiah;
+                document.getElementById('detailPoin').innerText = poin + ' Poin';
+
+                const statusWrapper = document.getElementById('statusIconWrapper');
+                const mainIcon = document.getElementById('mainStatusIcon');
+                const detailStatus = document.getElementById('detailStatus');
+                const detailKet = document.getElementById('detailKeterangan');
+
+                if (status === 'menunggu') {
+                    statusWrapper.className = "mx-auto mb-4 d-flex align-items-center justify-content-center bg-warning-subtle text-warning";
+                    mainIcon.className = "bi bi-clock-history fs-1";
+                    detailStatus.innerHTML = '<span class="badge bg-warning-subtle text-warning rounded-pill px-3">MENUNGGU</span>';
+                    detailKet.innerText = 'Permintaan penukaran sedang diproses oleh admin. Mohon tunggu kabar selanjutnya.';
+                }
+                else if (status === 'ditolak') {
+                    statusWrapper.className = "mx-auto mb-4 d-flex align-items-center justify-content-center bg-danger-subtle text-danger";
+                    mainIcon.className = "bi bi-x-circle fs-1";
+                    detailStatus.innerHTML = '<span class="badge bg-danger-subtle text-danger rounded-pill px-3">DITOLAK</span>';
+                    detailKet.innerText = keterangan ? keterangan : 'Maaf, penukaran poin kamu tidak dapat diproses.';
+                }
+                else { 
+                    statusWrapper.className = "mx-auto mb-4 d-flex align-items-center justify-content-center bg-success-subtle text-success";
+                    mainIcon.className = "bi bi-check-circle-fill fs-1";
+                    detailStatus.innerHTML = '<span class="badge bg-success-subtle text-success rounded-pill px-3">SELESAI</span>';
+                    detailKet.innerText = 'Hore! Hadiah sudah bisa diambil di Bank Sampah Kawitan dengan menunjukkan riwayat ini.';
+                }
+            });
+        }
     </script>
 
     @if(session('success'))

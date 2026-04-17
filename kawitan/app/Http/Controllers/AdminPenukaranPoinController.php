@@ -13,26 +13,27 @@ class AdminPenukaranPoinController extends Controller
         $query = PenukaranPoin::with(['riwayatPoin.user', 'hadiah'])
             ->orderBy('tanggal', 'desc');
 
-        // 🔍 SEARCH (nama user & hadiah)
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->whereHas('riwayatPoin.user', function ($u) use ($request) {
                     $u->where('username', 'like', '%' . $request->search . '%');
                 })
-                    ->orWhereHas('hadiah', function ($h) use ($request) {
-                        $h->where('nama_hadiah', 'like', '%' . $request->search . '%');
-                    });
+                ->orWhereHas('hadiah', function ($h) use ($request) {
+                    $h->where('nama_hadiah', 'like', '%' . $request->search . '%');
+                });
             });
         }
 
-        // 📅 FILTER TANGGAL
         if ($request->filled('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
         }
 
-        // 📆 FILTER BULAN
         if ($request->filled('bulan')) {
             $query->whereMonth('tanggal', (int) $request->bulan);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
         $data = $query->paginate(10)->withQueryString();
@@ -50,8 +51,13 @@ class AdminPenukaranPoinController extends Controller
                 return back()->with('error', 'Data sudah diproses');
             }
 
+            DB::table('users')
+                ->where('id', $penukaran->riwayatPoin->id_user)
+                ->decrement('saldo', $penukaran->poin_dipakai);
+
             $penukaran->update([
-                'status' => 'selesai'
+                'status' => 'selesai',
+                'keterangan' => 'Berhasil menukar poin'
             ]);
 
             DB::table('riwayat_poin')
@@ -74,8 +80,13 @@ class AdminPenukaranPoinController extends Controller
         }
     }
 
-    public function tolak($id)
+    public function tolak(Request $request, $id)
     {
+
+        $request->validate([
+            'keterangan' => 'required|string|max:255'
+        ]);
+
         DB::beginTransaction();
         try {
             $penukaran = PenukaranPoin::with('riwayatPoin')->findOrFail($id);
@@ -85,13 +96,14 @@ class AdminPenukaranPoinController extends Controller
             }
 
             $penukaran->update([
-                'status' => 'ditolak'
+                'status' => 'ditolak',
+                'keterangan' => $request->keterangan
             ]);
 
             DB::table('riwayat_poin')
                 ->where('id_riwayat', $penukaran->id_riwayat)
                 ->update([
-                    'keterangan' => 'DITOLAK'
+                    'keterangan' => 'Ditolak: ' . $request->keterangan
                 ]);
 
             DB::commit();

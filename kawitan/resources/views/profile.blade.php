@@ -35,6 +35,17 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div class="alert alert-danger rounded-3 d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <div>
+                        @foreach ($errors->all() as $error)
+                            <div>{{ $error }}</div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             <div class="profile-card-clean shadow-sm">
                 <form action="{{ route('profile.update') }}" method="POST">
                     @csrf

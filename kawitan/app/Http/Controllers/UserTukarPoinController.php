@@ -15,7 +15,6 @@ class UserTukarPoinController extends Controller
             return redirect('/login');
         }
 
-        // 🔥 SALDO (FIX UTAMA)
         $saldo = DB::table('riwayat_poin')
             ->where('id_user', $idUser)
             ->selectRaw("
@@ -29,8 +28,9 @@ class UserTukarPoinController extends Controller
                 COALESCE(SUM(
                     CASE 
                         WHEN poin = 'kurang' 
-                        AND keterangan NOT IN ('MENUNGGU', 'DITOLAK')
-                        THEN jumlah_poin 
+                            AND keterangan != 'MENUNGGU'
+                            AND keterangan NOT LIKE 'Ditolak%'                        
+                            THEN jumlah_poin 
                         ELSE 0 
                     END
                 ),0)
@@ -38,20 +38,19 @@ class UserTukarPoinController extends Controller
             ")
             ->value('saldo');
 
-        // 🔥 POIN MASUK
         $poinMasuk = DB::table('riwayat_poin')
             ->where('id_user', $idUser)
             ->where('poin', 'tambah')
             ->sum('jumlah_poin');
 
-        // 🔥 POIN KELUAR (FIX)
         $poinKeluar = DB::table('riwayat_poin')
             ->where('id_user', $idUser)
             ->selectRaw("
                 COALESCE(SUM(
                     CASE 
                         WHEN poin = 'kurang' 
-                        AND keterangan NOT IN ('MENUNGGU', 'DITOLAK')
+                        AND keterangan != 'MENUNGGU'
+                        AND keterangan NOT LIKE 'Ditolak%'
                         THEN jumlah_poin 
                         ELSE 0 
                     END
@@ -60,7 +59,6 @@ class UserTukarPoinController extends Controller
             ")
             ->value('total');
 
-        // 🔥 RIWAYAT TUKAR
         $riwayatTukarAll = DB::table('penukaran_poin')
             ->join('riwayat_poin', 'penukaran_poin.id_riwayat', '=', 'riwayat_poin.id_riwayat')
             ->join('hadiah', 'penukaran_poin.id_hadiah', '=', 'hadiah.id_hadiah')
@@ -72,7 +70,6 @@ class UserTukarPoinController extends Controller
             ->orderByDesc('penukaran_poin.id_penukaran')
             ->get();
 
-        // 🔥 DATA HADIAH
         $hadiah = DB::table('hadiah')
             ->orderBy('poin_dibutuhkan')
             ->get();
@@ -115,7 +112,8 @@ class UserTukarPoinController extends Controller
                 COALESCE(SUM(
                     CASE 
                         WHEN poin = 'kurang' 
-                        AND keterangan NOT IN ('MENUNGGU', 'DITOLAK')
+                        AND keterangan != 'MENUNGGU'
+                        AND keterangan NOT LIKE 'Ditolak%'
                         THEN jumlah_poin 
                         ELSE 0 
                     END

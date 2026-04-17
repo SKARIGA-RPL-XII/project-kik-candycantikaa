@@ -40,6 +40,16 @@
                             @endfor
                         </select>
 
+                        <select name="status" class="form-control" style="width:170px">
+                            <option value="">Semua Status</option>
+                            <option value="menunggu" {{ request('status') == 'menunggu' ? 'selected' : '' }}>Menunggu
+                            </option>
+                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai
+                            </option>
+                            <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak
+                            </option>
+                        </select>
+
                         <button id="btnRefresh" type="button" class="form-control btn-refresh">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
@@ -57,6 +67,7 @@
                                 <th>Poin</th>
                                 <th>Tanggal</th>
                                 <th>Status</th>
+                                <th>Keterangan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -83,6 +94,22 @@
                                             <span class="badge-status badge-rejected">
                                                 <i class="bi bi-x-circle-fill"></i> Ditolak
                                             </span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        @if ($row->status === 'ditolak' && $row->keterangan)
+                                            <span class="text-danger">
+                                                <i class="bi bi-x-circle"></i> {{ $row->keterangan }}
+                                            </span>
+
+                                        @elseif ($row->status === 'selesai')
+                                            <span class="text-success">
+                                                <i class="bi bi-check-circle"></i> Berhasil menukar poin
+                                            </span>
+
+                                        @else
+                                            <span class="text-muted">-</span>
                                         @endif
                                     </td>
 
@@ -129,6 +156,7 @@
 
     <form id="formTolak" method="POST">
         @csrf
+        <input type="hidden" name="keterangan" id="hiddenKeterangan">
     </form>
 
     <div class="modal fade" id="modalSetujui" tabindex="-1">
@@ -170,7 +198,10 @@
                     Permintaan akan ditolak dan tidak akan diproses.
                 </p>
 
-                <div class="d-flex justify-content-center gap-3">
+                <textarea id="inputKeterangan" class="form-control mt-3"
+                    placeholder="Masukkan alasan penolakan..."></textarea>
+
+                <div class="d-flex justify-content-center gap-3 mt-3">
                     <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         Batal
                     </button>
@@ -210,14 +241,27 @@
                 document.getElementById('formSetujui').submit();
             });
 
-            document.getElementById('btnYaTolak').addEventListener('click', function () {
-                document.getElementById('formTolak').submit();
+            document.getElementById('btnYaTolak').addEventListener('click', function (e) {
+                e.preventDefault(); 
+                let alasan = document.getElementById('inputKeterangan').value.trim();
+
+                if (alasan === '') {
+                    alert('Alasan penolakan wajib diisi!');
+                    return;
+                }
+
+                document.getElementById('hiddenKeterangan').value = alasan;
+
+                setTimeout(() => {
+                    document.getElementById('formTolak').submit();
+                }, 100);
             });
 
-            const form = document.querySelector('form');
+            const form = document.querySelector('form[action="{{ route('admin.persetujuan') }}"]');
             const searchInput = document.querySelector('input[name="search"]');
             const tanggalInput = document.querySelector('input[name="tanggal"]');
             const bulanSelect = document.querySelector('select[name="bulan"]');
+            const statusSelect = document.querySelector('select[name="status"]');
 
             let delay;
             searchInput.addEventListener('input', function () {
@@ -227,6 +271,7 @@
 
             tanggalInput.addEventListener('change', () => form.submit());
             bulanSelect.addEventListener('change', () => form.submit());
+            statusSelect.addEventListener('change', () => form.submit());
 
             document.getElementById('btnRefresh').addEventListener('click', function () {
                 window.location.href = "{{ route('admin.persetujuan') }}";

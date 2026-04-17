@@ -18,6 +18,7 @@ class PenukaranPoin extends Model
         'poin_dipakai',
         'tanggal',
         'status',
+        'keterangan',
     ];
 
     public function riwayatPoin()
