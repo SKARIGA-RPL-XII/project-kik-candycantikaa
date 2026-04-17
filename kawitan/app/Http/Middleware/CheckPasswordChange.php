@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Session;
 use App\Models\User;
 
 class CheckPasswordChange
@@ -12,9 +11,24 @@ class CheckPasswordChange
     {
         $user = User::find(session('id_user'));
 
-        if ($user && session('password_changed_at') != $user->password_changed_at) {
+        if (!$user) {
             session()->flush();
-            return redirect('/login')->with('error', 'Kata sandi telah direset, silakan login ulang dengan "password123"');
+            return redirect('/login');
+        }
+
+        // ✅ Fix: parse string ke Carbon dulu
+        $changedAt = $user->password_changed_at
+            ? \Carbon\Carbon::parse($user->password_changed_at)->timestamp
+            : null;
+
+        $loginAt = session('login_at');
+
+        if ($changedAt && $loginAt && $changedAt > $loginAt) {
+            session()->flush();
+            return redirect('/login')->with(
+                'error',
+                'Password Anda telah direset oleh admin. Silakan login ulang dengan "password123".'
+            );
         }
 
         return $next($request);

@@ -32,16 +32,15 @@ class LoginController extends Controller
         }
 
         if ($user->password_reset == 1) {
-            return back()->withErrors([
-                'password' => 'Password telah direset admin, silakan login ulang.',
-            ]);
+            $user->password_reset = 0;  
+            $user->save();
         }
 
         Session::put('login', true);
         Session::put('id_user', $user->id_user);
         Session::put('username', $user->username);
         Session::put('role', $user->role);
-        Session::put('password_changed_at', $user->password_changed_at);
+        Session::put('login_at', now()->timestamp);
 
         if ($user->role === 'admin') {
             return redirect('/dashboard_admin');
@@ -54,5 +53,5 @@ class LoginController extends Controller
     {
         Session::flush();
         return redirect('/login');
-    }
+    } 
 }

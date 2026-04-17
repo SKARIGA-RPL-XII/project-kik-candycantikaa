@@ -60,7 +60,7 @@ Route::middleware(['checkLogin', 'checkPasswordChange', 'admin'])->group(functio
     Route::get('/kelola_user', [UserController::class, 'index'])->name('kelola_user');
     Route::put('/users/{id_user}', [UserController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{id_user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
-    Route::post('/users/{id}/reset-password', [UserController::class, 'resetPassword'])
+    Route::post('/users/{id_user}/reset-password', [UserController::class, 'resetPassword'])
         ->name('admin.users.resetPassword');
 
     // Setoran

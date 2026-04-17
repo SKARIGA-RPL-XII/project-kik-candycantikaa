@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
-
 
 class UserController extends Controller
 {
@@ -35,14 +33,27 @@ class UserController extends Controller
         ]);
 
         $user = User::where('id_user', $id_user)->firstOrFail();
-
         $user->username = $request->username;
+
+        if ($request->boolean('reset_password')) {
+            $user->password = Hash::make('password123');
+            $user->password_changed_at = now();
+        }
+
+        $user->save();
+
+        return redirect()->route('kelola_user')->with('edit_success', true);
+    }
+
+    public function resetPassword($id)
+    {
+        $user = User::where('id_user', $id)->firstOrFail();
 
         $user->password = Hash::make('password123');
 
         $user->save();
 
-        return redirect()->route('kelola_user')->with('edit_success', true);
+        return redirect()->route('kelola_user')->with('reset_success', true);
     }
 
     public function destroy($id_user)
