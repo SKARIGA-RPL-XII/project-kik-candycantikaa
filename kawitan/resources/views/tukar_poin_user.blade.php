@@ -225,15 +225,18 @@
                                     $status = strtolower($item->status);
 
                                     if ($status == 'menunggu') {
-                                        $bg = 'bg-warning';
+                                        $bg = 'bg-warning-subtle';
+                                        $text = 'text-warning';
                                     } elseif ($status == 'ditolak') {
-                                        $bg = 'bg-danger';
+                                        $bg = 'bg-danger-subtle';
+                                        $text = 'text-danger';
                                     } else {
-                                        $bg = 'bg-success';
+                                        $bg = 'bg-success-subtle';
+                                        $text = 'text-success';
                                     }
                                 @endphp
 
-                                <span class="badge {{ $bg }} rounded-pill fw-bold" style="font-size: 0.7rem;">
+                                <span class="badge {{ $bg }} {{ $text }} rounded-pill px-3 py-2 fw-bold small">
                                     {{ strtoupper($item->status) }}
                                 </span>
                             </div>
@@ -366,7 +369,7 @@
                     detailStatus.innerHTML = '<span class="badge bg-danger-subtle text-danger rounded-pill px-3">DITOLAK</span>';
                     detailKet.innerText = keterangan ? keterangan : 'Maaf, penukaran poin kamu tidak dapat diproses.';
                 }
-                else { 
+                else {
                     statusWrapper.className = "mx-auto mb-4 d-flex align-items-center justify-content-center bg-success-subtle text-success";
                     mainIcon.className = "bi bi-check-circle-fill fs-1";
                     detailStatus.innerHTML = '<span class="badge bg-success-subtle text-success rounded-pill px-3">SELESAI</span>';

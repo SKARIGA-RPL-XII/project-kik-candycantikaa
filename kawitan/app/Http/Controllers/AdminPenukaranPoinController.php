@@ -14,22 +14,25 @@ class AdminPenukaranPoinController extends Controller
             ->orderBy('tanggal', 'desc');
 
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->whereHas('riwayatPoin.user', function ($u) use ($request) {
-                    $u->where('username', 'like', '%' . $request->search . '%');
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('riwayatPoin', function ($r) use ($search) {
+                    $r->whereHas('user', function ($u) use ($search) {
+                        $u->where('username', 'like', '%' . $search . '%');
+                    });
                 })
-                    ->orWhereHas('hadiah', function ($h) use ($request) {
-                        $h->where('nama_hadiah', 'like', '%' . $request->search . '%');
+                    ->orWhereHas('hadiah', function ($h) use ($search) {
+                        $h->where('nama_hadiah', 'like', '%' . $search . '%');
                     });
             });
         }
 
         if ($request->filled('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
-        }
-
-        if ($request->filled('bulan')) {
-            $query->whereMonth('tanggal', (int) $request->bulan);
+        } elseif ($request->filled('bulan')) {
+            $tahun = $request->filled('tahun') ? (int) $request->tahun : now()->year;
+            $query->whereMonth('tanggal', (int) $request->bulan)
+                ->whereYear('tanggal', $tahun);
         }
 
         if ($request->filled('status')) {
@@ -73,7 +76,7 @@ class AdminPenukaranPoinController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Gagal setujui: ' . $e->getMessage()); 
+            \Log::error('Gagal setujui: ' . $e->getMessage());
             return back()->with('error', 'Gagal: ' . $e->getMessage());
         }
     }

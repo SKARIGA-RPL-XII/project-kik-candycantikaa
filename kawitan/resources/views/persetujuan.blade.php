@@ -23,24 +23,26 @@
             <div class="card-body">
 
                 <div class="d-flex gap-2 mb-4">
-                    <form method="GET" action="{{ route('admin.persetujuan') }}" class="d-flex gap-2">
+                    <form method="GET" action="{{ route('admin.persetujuan') }}" class="d-flex gap-2" id="filterForm">
 
                         <input type="text" name="search" class="form-control" placeholder="Cari Data..."
-                            value="{{ request('search') }}" style="width:260px">
+                            value="{{ request('search') }}" style="width:260px" oninput="debounceSearch()">
 
                         <input type="date" name="tanggal" class="form-control" value="{{ request('tanggal') }}"
-                            style="width:170px">
+                            style="width:170px" onchange="document.getElementById('filterForm').submit()">
 
-                        <select name="bulan" class="form-control" style="width:160px">
+                        <select name="bulan" class="form-control" style="width:160px"
+                            onchange="document.getElementById('filterForm').submit()">
                             <option value="">Pilih Bulan</option>
                             @for ($i = 1; $i <= 12; $i++)
-                                <option value="{{ sprintf('%02d', $i) }}" {{ request('bulan') == sprintf('%02d', $i) ? 'selected' : '' }}>
+                                <option value="{{ $i }}" {{ (int) request('bulan') === $i ? 'selected' : '' }}>
                                     {{ DateTime::createFromFormat('!m', $i)->format('F') }}
                                 </option>
                             @endfor
                         </select>
 
-                        <select name="status" class="form-control" style="width:170px">
+                        <select name="status" class="form-control" style="width:170px"
+                            onchange="document.getElementById('filterForm').submit()">
                             <option value="">Semua Status</option>
                             <option value="menunggu" {{ request('status') == 'menunggu' ? 'selected' : '' }}>Menunggu
                             </option>
@@ -49,6 +51,8 @@
                             <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak
                             </option>
                         </select>
+
+                        <input type="hidden" name="tahun" value="{{ request('tahun', date('Y')) }}">
 
                         <button id="btnRefresh" type="button" class="form-control btn-refresh">
                             <i class="bi bi-arrow-clockwise"></i>
@@ -208,9 +212,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        window.addEventListener('load', function () {
-            console.log('Script loaded');
+        let debounceTimer = null;
+        function debounceSearch() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () {
+                document.getElementById('filterForm').submit();
+            }, 500);
+        }
 
+        window.addEventListener('load', function () {
             let idDipilih = null;
 
             document.addEventListener('click', function (e) {
@@ -218,19 +228,15 @@
                 const btnSetujui = e.target.closest('.btn-setujui');
                 if (btnSetujui) {
                     idDipilih = btnSetujui.getAttribute('data-id');
-                    console.log('ID setujui:', idDipilih);
                 }
 
                 const btnTolak = e.target.closest('.btn-tolak');
                 if (btnTolak) {
                     idDipilih = btnTolak.getAttribute('data-id');
-                    console.log('ID tolak:', idDipilih);
                     document.getElementById('inputKeterangan').value = '';
                 }
 
                 if (e.target.closest('#btnYaSetujui')) {
-                    console.log('btnYaSetujui clicked, id:', idDipilih);
-
                     if (!idDipilih) {
                         alert('ID tidak ditemukan!');
                         return;
@@ -247,14 +253,10 @@
 
                     form.appendChild(csrf);
                     document.body.appendChild(form);
-
-                    console.log('Submitting to:', form.action);
                     form.submit();
                 }
 
                 if (e.target.closest('#btnYaTolak')) {
-                    console.log('btnYaTolak clicked, id:', idDipilih);
-
                     var alasan = document.getElementById('inputKeterangan').value.trim();
 
                     if (alasan === '') {
@@ -284,8 +286,6 @@
                     form.appendChild(csrf);
                     form.appendChild(ket);
                     document.body.appendChild(form);
-
-                    console.log('Submitting to:', form.action);
                     form.submit();
                 }
 
