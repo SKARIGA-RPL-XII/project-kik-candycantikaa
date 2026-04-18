@@ -102,12 +102,10 @@
                                             <span class="text-danger">
                                                 <i class="bi bi-x-circle"></i> {{ $row->keterangan }}
                                             </span>
-
                                         @elseif ($row->status === 'selesai')
                                             <span class="text-success">
                                                 <i class="bi bi-check-circle"></i> Berhasil menukar poin
                                             </span>
-
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
@@ -115,13 +113,15 @@
 
                                     <td>
                                         @if ($row->status === 'menunggu')
-                                            <button class="btn-action edit btn-setujui" data-id="{{ $row->id_penukaran }}"
-                                                data-bs-toggle="modal" data-bs-target="#modalSetujui">
+                                            <button type="button" class="btn-action edit btn-setujui"
+                                                data-id="{{ $row->id_penukaran }}" data-bs-toggle="modal"
+                                                data-bs-target="#modalSetujui">
                                                 <i class="bi bi-check-lg"></i>
                                             </button>
 
-                                            <button class="btn-action delete btn-tolak" data-id="{{ $row->id_penukaran }}"
-                                                data-bs-toggle="modal" data-bs-target="#modalTolak">
+                                            <button type="button" class="btn-action delete btn-tolak"
+                                                data-id="{{ $row->id_penukaran }}" data-bs-toggle="modal"
+                                                data-bs-target="#modalTolak">
                                                 <i class="bi bi-x-lg"></i>
                                             </button>
                                         @else
@@ -149,15 +149,6 @@
             </div>
         </div>
     </div>
-
-    <form id="formSetujui" method="POST">
-        @csrf
-    </form>
-
-    <form id="formTolak" method="POST">
-        @csrf
-        <input type="hidden" name="keterangan" id="hiddenKeterangan">
-    </form>
 
     <div class="modal fade" id="modalSetujui" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -217,69 +208,93 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        window.addEventListener('load', function () {
+            console.log('Script loaded');
 
             let idDipilih = null;
 
-            document.querySelectorAll('.btn-setujui').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    idDipilih = this.dataset.id;
-                    document.getElementById('formSetujui').action =
-                        `/penukaran-poin/setujui/${idDipilih}`;
-                });
-            });
+            document.addEventListener('click', function (e) {
 
-            document.querySelectorAll('.btn-tolak').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    idDipilih = this.dataset.id;
-                    document.getElementById('formTolak').action =
-                        `/penukaran-poin/tolak/${idDipilih}`;
-                });
-            });
-
-            document.getElementById('btnYaSetujui').addEventListener('click', function () {
-                document.getElementById('formSetujui').submit();
-            });
-
-            document.getElementById('btnYaTolak').addEventListener('click', function (e) {
-                e.preventDefault(); 
-                let alasan = document.getElementById('inputKeterangan').value.trim();
-
-                if (alasan === '') {
-                    alert('Alasan penolakan wajib diisi!');
-                    return;
+                const btnSetujui = e.target.closest('.btn-setujui');
+                if (btnSetujui) {
+                    idDipilih = btnSetujui.getAttribute('data-id');
+                    console.log('ID setujui:', idDipilih);
                 }
 
-                document.getElementById('hiddenKeterangan').value = alasan;
+                const btnTolak = e.target.closest('.btn-tolak');
+                if (btnTolak) {
+                    idDipilih = btnTolak.getAttribute('data-id');
+                    console.log('ID tolak:', idDipilih);
+                    document.getElementById('inputKeterangan').value = '';
+                }
 
-                setTimeout(() => {
-                    document.getElementById('formTolak').submit();
-                }, 100);
+                if (e.target.closest('#btnYaSetujui')) {
+                    console.log('btnYaSetujui clicked, id:', idDipilih);
+
+                    if (!idDipilih) {
+                        alert('ID tidak ditemukan!');
+                        return;
+                    }
+
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ url("/penukaran-poin/setujui") }}/' + idDipilih;
+
+                    var csrf = document.createElement('input');
+                    csrf.type = 'hidden';
+                    csrf.name = '_token';
+                    csrf.value = '{{ csrf_token() }}';
+
+                    form.appendChild(csrf);
+                    document.body.appendChild(form);
+
+                    console.log('Submitting to:', form.action);
+                    form.submit();
+                }
+
+                if (e.target.closest('#btnYaTolak')) {
+                    console.log('btnYaTolak clicked, id:', idDipilih);
+
+                    var alasan = document.getElementById('inputKeterangan').value.trim();
+
+                    if (alasan === '') {
+                        alert('Alasan penolakan wajib diisi!');
+                        return;
+                    }
+
+                    if (!idDipilih) {
+                        alert('ID tidak ditemukan!');
+                        return;
+                    }
+
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ url("/penukaran-poin/tolak") }}/' + idDipilih;
+
+                    var csrf = document.createElement('input');
+                    csrf.type = 'hidden';
+                    csrf.name = '_token';
+                    csrf.value = '{{ csrf_token() }}';
+
+                    var ket = document.createElement('input');
+                    ket.type = 'hidden';
+                    ket.name = 'keterangan';
+                    ket.value = alasan;
+
+                    form.appendChild(csrf);
+                    form.appendChild(ket);
+                    document.body.appendChild(form);
+
+                    console.log('Submitting to:', form.action);
+                    form.submit();
+                }
+
+                if (e.target.closest('#btnRefresh')) {
+                    window.location.href = "{{ route('admin.persetujuan') }}";
+                }
             });
-
-            const form = document.querySelector('form[action="{{ route('admin.persetujuan') }}"]');
-            const searchInput = document.querySelector('input[name="search"]');
-            const tanggalInput = document.querySelector('input[name="tanggal"]');
-            const bulanSelect = document.querySelector('select[name="bulan"]');
-            const statusSelect = document.querySelector('select[name="status"]');
-
-            let delay;
-            searchInput.addEventListener('input', function () {
-                clearTimeout(delay);
-                delay = setTimeout(() => form.submit(), 500);
-            });
-
-            tanggalInput.addEventListener('change', () => form.submit());
-            bulanSelect.addEventListener('change', () => form.submit());
-            statusSelect.addEventListener('change', () => form.submit());
-
-            document.getElementById('btnRefresh').addEventListener('click', function () {
-                window.location.href = "{{ route('admin.persetujuan') }}";
-            });
-
         });
     </script>
-
 
 </body>
 

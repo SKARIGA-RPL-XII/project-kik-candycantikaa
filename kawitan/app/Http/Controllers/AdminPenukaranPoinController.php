@@ -18,9 +18,9 @@ class AdminPenukaranPoinController extends Controller
                 $q->whereHas('riwayatPoin.user', function ($u) use ($request) {
                     $u->where('username', 'like', '%' . $request->search . '%');
                 })
-                ->orWhereHas('hadiah', function ($h) use ($request) {
-                    $h->where('nama_hadiah', 'like', '%' . $request->search . '%');
-                });
+                    ->orWhereHas('hadiah', function ($h) use ($request) {
+                        $h->where('nama_hadiah', 'like', '%' . $request->search . '%');
+                    });
             });
         }
 
@@ -45,19 +45,17 @@ class AdminPenukaranPoinController extends Controller
     {
         DB::beginTransaction();
         try {
-            $penukaran = PenukaranPoin::with('riwayatPoin')->findOrFail($id);
+            $penukaran = PenukaranPoin::with('riwayatPoin')
+                ->where('id_penukaran', $id)
+                ->firstOrFail();
 
             if ($penukaran->status !== 'menunggu') {
                 return back()->with('error', 'Data sudah diproses');
             }
 
-            DB::table('users')
-                ->where('id', $penukaran->riwayatPoin->id_user)
-                ->decrement('saldo', $penukaran->poin_dipakai);
-
             $penukaran->update([
                 'status' => 'selesai',
-                'keterangan' => 'Berhasil menukar poin'
+                'keterangan' => null
             ]);
 
             DB::table('riwayat_poin')
@@ -71,12 +69,12 @@ class AdminPenukaranPoinController extends Controller
                 ->decrement('stok', 1);
 
             DB::commit();
-
             return back()->with('success', 'Penukaran disetujui');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Gagal menyetujui');
+            \Log::error('Gagal setujui: ' . $e->getMessage()); 
+            return back()->with('error', 'Gagal: ' . $e->getMessage());
         }
     }
 
@@ -89,7 +87,9 @@ class AdminPenukaranPoinController extends Controller
 
         DB::beginTransaction();
         try {
-            $penukaran = PenukaranPoin::with('riwayatPoin')->findOrFail($id);
+            $penukaran = PenukaranPoin::with('riwayatPoin')
+                ->where('id_penukaran', $id)
+                ->firstOrFail();
 
             if ($penukaran->status !== 'menunggu') {
                 return back()->with('error', 'Data sudah diproses');

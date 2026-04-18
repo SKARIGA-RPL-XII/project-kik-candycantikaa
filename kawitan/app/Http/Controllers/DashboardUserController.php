@@ -18,24 +18,41 @@ class DashboardUserController extends Controller
         $saldo = DB::table('riwayat_poin')
             ->where('id_user', $idUser)
             ->selectRaw("
-                COALESCE(SUM(
-                    CASE 
-                        WHEN poin = 'tambah' THEN jumlah_poin 
-                        ELSE 0 
-                    END
-                ),0)
-                -
-                COALESCE(SUM(
-                    CASE 
-                        WHEN poin = 'kurang' 
-                        AND keterangan NOT IN ('MENUNGGU', 'DITOLAK')
-                        THEN jumlah_poin 
-                        ELSE 0 
-                    END
-                ),0)
-                AS saldo
-            ")
+        COALESCE(SUM(
+            CASE 
+                WHEN poin = 'tambah' THEN jumlah_poin 
+                ELSE 0 
+            END
+        ),0)
+        -
+        COALESCE(SUM(
+            CASE 
+                WHEN poin = 'kurang' 
+                    AND keterangan != 'MENUNGGU'
+                    AND keterangan NOT LIKE 'Ditolak%'                        
+                    THEN jumlah_poin 
+                ELSE 0 
+            END
+        ),0)
+        AS saldo
+    ")
             ->value('saldo');
+
+        $poinKeluar = DB::table('riwayat_poin')
+            ->where('id_user', $idUser)
+            ->selectRaw("
+        COALESCE(SUM(
+            CASE 
+                WHEN poin = 'kurang' 
+                AND keterangan != 'MENUNGGU'
+                AND keterangan NOT LIKE 'Ditolak%'
+                THEN jumlah_poin 
+                ELSE 0 
+            END
+        ),0)
+        AS total
+    ")
+            ->value('total');
 
         $poinMasuk = DB::table('riwayat_poin')
             ->where('id_user', $idUser)
@@ -45,16 +62,17 @@ class DashboardUserController extends Controller
         $poinKeluar = DB::table('riwayat_poin')
             ->where('id_user', $idUser)
             ->selectRaw("
-                COALESCE(SUM(
-                    CASE 
-                        WHEN poin = 'kurang' 
-                        AND keterangan NOT IN ('MENUNGGU', 'DITOLAK')
-                        THEN jumlah_poin 
-                        ELSE 0 
-                    END
-                ),0)
-                AS total
-            ")
+        COALESCE(SUM(
+            CASE 
+                WHEN poin = 'kurang' 
+                AND keterangan != 'MENUNGGU'
+                AND keterangan NOT LIKE 'Ditolak%'
+                THEN jumlah_poin 
+                ELSE 0 
+            END
+        ),0)
+        AS total
+    ")
             ->value('total');
 
         $eco = DB::table('setoran')
