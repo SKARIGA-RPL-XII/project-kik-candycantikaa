@@ -53,7 +53,7 @@
                 <div class="col-md-3">
                     <div class="card-dashboard d-flex justify-content-between align-items-center">
                         <div>
-                            <h6>CO₂ Hemat</h6>
+                            <h6>Reduksi CO₂</h6>
                             <div class="card-value">{{ $co2 }} kg</div>
                         </div>
                         <div class="icon-box icon-co2">
@@ -65,7 +65,7 @@
                 <div class="col-md-3">
                     <div class="card-dashboard d-flex justify-content-between align-items-center">
                         <div>
-                            <h6>Air Hemat</h6>
+                            <h6>Hemat Air</h6>
                             <div class="card-value">{{ $air }} L</div>
                         </div>
                         <div class="icon-box icon-water">
@@ -77,7 +77,7 @@
                 <div class="col-md-3">
                     <div class="card-dashboard d-flex justify-content-between align-items-center">
                         <div>
-                            <h6>Energi Hemat</h6>
+                            <h6>Hemat Energi</h6>
                             <div class="card-value">{{ $energi }} kWh</div>
                         </div>
                         <div class="icon-box icon-energy">

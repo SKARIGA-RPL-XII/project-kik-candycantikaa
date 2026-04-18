@@ -15,7 +15,6 @@ class DashboardUserController extends Controller
             return redirect('/login');
         }
 
-        // 🔥 TOTAL SALDO (FIX LOGIC TERBARU)
         $saldo = DB::table('riwayat_poin')
             ->where('id_user', $idUser)
             ->selectRaw("
@@ -38,13 +37,11 @@ class DashboardUserController extends Controller
             ")
             ->value('saldo');
 
-        // 🔥 POIN MASUK
         $poinMasuk = DB::table('riwayat_poin')
             ->where('id_user', $idUser)
             ->where('poin', 'tambah')
             ->sum('jumlah_poin');
 
-        // 🔥 POIN KELUAR (HANYA YANG SUDAH DISETUJUI)
         $poinKeluar = DB::table('riwayat_poin')
             ->where('id_user', $idUser)
             ->selectRaw("
@@ -60,7 +57,6 @@ class DashboardUserController extends Controller
             ")
             ->value('total');
 
-        // 🔥 ECO IMPACT (AMBIL DARI DB, BUKAN HITUNG LAGI)
         $eco = DB::table('setoran')
             ->where('id_user', $idUser)
             ->selectRaw("
