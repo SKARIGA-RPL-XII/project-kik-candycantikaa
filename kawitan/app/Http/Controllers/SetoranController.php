@@ -8,11 +8,10 @@ use App\Models\User;
 use App\Models\JenisSampah;
 use Carbon\Carbon;
 use App\Models\RiwayatPoin;
-
+use Illuminate\Support\Facades\DB;
 
 class SetoranController extends Controller
 {
-
     public function index(Request $request)
     {
         $query = Setoran::with(['user', 'jenis'])
@@ -39,15 +38,10 @@ class SetoranController extends Controller
         }
 
         $setoran = $query->paginate(10)->withQueryString();
-
         $users = User::where('role', 'user')->get();
         $jenisSampah = JenisSampah::all();
 
-        return view('setoran', compact(
-            'setoran',
-            'users',
-            'jenisSampah'
-        ));
+        return view('setoran', compact('setoran', 'users', 'jenisSampah'));
     }
 
     public function store(Request $request)
@@ -62,32 +56,45 @@ class SetoranController extends Controller
         ]);
 
         $jenis = JenisSampah::where('id_jenis', $request->id_jenis)->firstOrFail();
-
         $berat = $request->berat;
-
         $totalPoin = $berat * $jenis->poin_per_kg;
 
-        Setoran::create([
-            'id_user' => $request->id_user,
-            'id_jenis' => $request->id_jenis,
-            'berat' => $berat,
-            'total_poin' => $berat * $jenis->poin_per_kg,
-            'total_co2' => $berat * $jenis->co2_per_kg,
-            'total_air' => $berat * $jenis->air_per_kg,
-            'total_energi' => $berat * $jenis->energi_per_kg,
-            'tanggal' => $today,
-        ]);
+        DB::beginTransaction();
+        try {
+            $setoran = Setoran::create([
+                'id_user' => $request->id_user,
+                'id_jenis' => $request->id_jenis,
+                'berat' => $berat,
+                'total_poin' => $totalPoin,
+                'total_co2' => $berat * $jenis->co2_per_kg,
+                'total_air' => $berat * $jenis->air_per_kg,
+                'total_energi' => $berat * $jenis->energi_per_kg,
+                'tanggal' => $today,
+            ]);
 
-        RiwayatPoin::create([
-            'id_user' => $request->id_user,
-            'poin' => 'tambah',
-            'jumlah_poin' => $totalPoin,
-            'keterangan' => 'Setor sampah ' . $jenis->nama_jenis,
-        ]);
+            RiwayatPoin::create([
+                'id_user' => $request->id_user,
+                'id_setoran' => $setoran->id_setoran,
+                'poin' => 'tambah',
+                'jumlah_poin' => $totalPoin,
+                'keterangan' => 'Setor sampah ' . $jenis->nama_jenis,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        return redirect()
-            ->route('setoran.index')
-            ->with('tambah_success', true);
+            DB::commit();
+
+            return redirect()
+                ->route('setoran.index')
+                ->with('tambah_success', true);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Gagal tambah setoran: ' . $e->getMessage());
+            return redirect()
+                ->route('setoran.index')
+                ->with('error', 'Gagal menambah data setoran');
+        }
     }
 
     public function update(Request $request, $id)
@@ -97,34 +104,63 @@ class SetoranController extends Controller
         ]);
 
         $setoran = Setoran::where('id_setoran', $id)->firstOrFail();
-
         $jenis = JenisSampah::where('id_jenis', $setoran->id_jenis)->firstOrFail();
-
         $berat = $request->berat;
+        $totalPoinBaru = $berat * $jenis->poin_per_kg;
 
-        $setoran = Setoran::where('id_setoran', $id)->firstOrFail();
+        DB::beginTransaction();
+        try {
+            $setoran->update([
+                'berat' => $berat,
+                'total_poin' => $totalPoinBaru,
+                'total_co2' => $berat * $jenis->co2_per_kg,
+                'total_air' => $berat * $jenis->air_per_kg,
+                'total_energi' => $berat * $jenis->energi_per_kg,
+            ]);
 
-        $setoran = Setoran::where('id_setoran', $id)->firstOrFail();
+            RiwayatPoin::where('id_setoran', $id)
+                ->update([
+                    'jumlah_poin' => $totalPoinBaru,
+                    'updated_at' => now(),
+                ]);
 
-        $setoran->update([
-            'berat' => $berat,
-            'total_poin' => $berat * $jenis->poin_per_kg,
-            'total_co2' => $berat * $jenis->co2_per_kg,
-            'total_air' => $berat * $jenis->air_per_kg,
-            'total_energi' => $berat * $jenis->energi_per_kg,
-        ]);
+            DB::commit();
 
-        return redirect()
-            ->route('setoran.index')
-            ->with('edit_success', true);
+            return redirect()
+                ->route('setoran.index')
+                ->with('edit_success', true);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Gagal update setoran #' . $id . ': ' . $e->getMessage());
+            return redirect()
+                ->route('setoran.index')
+                ->with('error', 'Gagal mengubah data setoran');
+        }
     }
 
     public function destroy($id)
     {
-        Setoran::where('id_setoran', $id)->delete();
+        $setoran = Setoran::where('id_setoran', $id)->firstOrFail();
 
-        return redirect()
-            ->route('setoran.index')
-            ->with('hapus_success', true);
+        DB::beginTransaction();
+        try {
+            RiwayatPoin::where('id_setoran', $id)->delete();
+
+            $setoran->delete();
+
+            DB::commit();
+
+            return redirect()
+                ->route('setoran.index')
+                ->with('hapus_success', true);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Gagal hapus setoran #' . $id . ': ' . $e->getMessage());
+            return redirect()
+                ->route('setoran.index')
+                ->with('error', 'Gagal menghapus data setoran');
+        }
     }
 }

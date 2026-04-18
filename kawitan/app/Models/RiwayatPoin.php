@@ -14,6 +14,7 @@ class RiwayatPoin extends Model
     protected $fillable = [
         'id_user',
         'poin',
+        'id_setoran',
         'jumlah_poin',
         'keterangan',
     ];
